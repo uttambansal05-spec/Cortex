@@ -1682,8 +1682,14 @@ function switchTab(id) {
 }
 
 // ── Waitlist form ────────────────────────────────────────────────
-function submitWaitlist(e) {
+async function submitWaitlist(e) {
   e.preventDefault();
+  const email = document.getElementById('waitlist-email').value;
+  await fetch('https://formspree.io/f/mqegezrk', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: JSON.stringify({ email })
+  });
   document.getElementById('cta-form').style.display = 'none';
   document.getElementById('waitlist-success').style.display = 'block';
 }
