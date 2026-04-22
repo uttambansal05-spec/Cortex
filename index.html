@@ -1,1698 +1,1578 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cortex — The Product Brain</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cortex — Context Infrastructure for AI-Native Teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#06060A;
-  --bg2:#0D0D14;
-  --bg3:#12121C;
-  --surface:#1A1A28;
-  --border:rgba(255,255,255,0.06);
-  --border2:rgba(255,255,255,0.1);
-  --text:#F0EEE8;
-  --muted:#6B6B7A;
-  --muted2:#9898A8;
-  --accent:#C8FF47;
-  --accent2:#7B6EF6;
-  --accent3:#FF5C3A;
-  --glow:rgba(200,255,71,0.12);
-}
-html{scroll-behavior:smooth;font-size:16px}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Inter',sans-serif;
-  font-weight:300;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ─── TYPOGRAPHY ─── */
-.f-display{font-family:'Clash Display',sans-serif;font-weight:700;letter-spacing:-0.03em;line-height:0.94}
-.f-serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+  :root {
+    --bg: #0A0C0E;
+    --bg2: #0F1114;
+    --bg3: #141618;
+    --border: rgba(255,255,255,0.07);
+    --border-em: rgba(16,185,129,0.25);
+    --em: #10B981;
+    --em-dim: rgba(16,185,129,0.12);
+    --em-glow: rgba(16,185,129,0.06);
+    --text: #F0F2F4;
+    --text-2: #8A9099;
+    --text-3: #4A5160;
+    --font-head: 'Outfit', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
 
-/* ─── NAV ─── */
-#nav{
-  position:fixed;top:0;left:0;right:0;z-index:900;
-  height:60px;padding:0 48px;
-  display:flex;align-items:center;justify-content:space-between;
-  transition:background 0.4s,border-color 0.4s;
-  border-bottom:1px solid transparent;
-}
-#nav.scrolled{background:rgba(6,6,10,0.92);backdrop-filter:blur(24px);border-color:var(--border)}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-logo-mark{
-  width:28px;height:28px;border-radius:8px;
-  background:var(--accent);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Clash Display',sans-serif;font-weight:700;font-size:13px;color:#06060A
-}
-.nav-logo-text{font-family:'Clash Display',sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.02em;color:var(--text)}
-.nav-links{display:flex;align-items:center;gap:8px}
-.nav-link{
-  padding:7px 14px;font-size:13px;color:var(--muted2);text-decoration:none;
-  border-radius:6px;transition:all 0.2s
-}
-.nav-link:hover{color:var(--text);background:rgba(255,255,255,0.05)}
-.nav-link.active{color:var(--text)}
-.nav-cta{
-  background:var(--accent);color:#06060A;padding:8px 18px;
-  border-radius:7px;font-size:13px;font-weight:500;text-decoration:none;
-  transition:opacity 0.2s;font-family:'Clash Display',sans-serif;letter-spacing:-0.01em
-}
-.nav-cta:hover{opacity:0.85}
+  html { scroll-behavior: smooth; }
 
-/* ─── HERO ─── */
-#hero{
-  position:relative;min-height:100vh;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-align:center;padding:80px 24px 60px;overflow:hidden
-}
-#neural-canvas{
-  position:absolute;inset:0;width:100%;height:100%;
-  opacity:0.85;pointer-events:none
-}
-.hero-inner{position:relative;z-index:2;max-width:900px;margin:0 auto}
-.hero-pill{
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid rgba(200,255,71,0.2);
-  background:rgba(200,255,71,0.05);
-  padding:6px 16px;border-radius:100px;
-  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);
-  margin-bottom:36px;animation:fadeUp 0.8s ease both
-}
-.live-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:livePulse 2s infinite}
-@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(200,255,71,0.4)}50%{opacity:0.7;box-shadow:0 0 0 6px rgba(200,255,71,0)}}
-.hero-h1{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:clamp(56px,9vw,120px);
-  line-height:0.9;letter-spacing:-0.04em;
-  animation:fadeUp 0.8s 0.1s ease both
-}
-.hero-h1 .line2{
-  display:block;
-  font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;
-  color:var(--accent);font-size:clamp(52px,8.5vw,112px)
-}
-.hero-sub{
-  font-size:clamp(15px,1.8vw,19px);color:var(--muted2);
-  max-width:560px;margin:28px auto 0;line-height:1.65;
-  animation:fadeUp 0.8s 0.2s ease both
-}
-.hero-actions{
-  display:flex;align-items:center;gap:12px;justify-content:center;
-  margin-top:44px;animation:fadeUp 0.8s 0.3s ease both
-}
-.btn-primary{
-  display:flex;align-items:center;gap:8px;
-  background:var(--accent);color:#06060A;padding:14px 26px;
-  border-radius:8px;font-family:'Clash Display',sans-serif;font-weight:600;
-  font-size:14px;letter-spacing:-0.01em;text-decoration:none;border:none;cursor:pointer;
-  transition:opacity 0.2s,transform 0.2s
-}
-.btn-primary:hover{opacity:0.9;transform:translateY(-1px)}
-.btn-secondary{
-  display:flex;align-items:center;gap:8px;
-  background:transparent;color:var(--text);padding:14px 24px;
-  border-radius:8px;font-size:14px;text-decoration:none;border:1px solid var(--border2);
-  transition:all 0.2s;cursor:pointer
-}
-.btn-secondary:hover{border-color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04)}
-.hero-scroll{
-  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);
-  animation:fadeUp 1s 0.6s ease both
-}
-.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--muted),transparent)}
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
 
-/* ─── SECTIONS ─── */
-.page-section{padding:120px 48px;max-width:1200px;margin:0 auto}
-.full-bleed{max-width:none;padding:0}
-.section-eyebrow{
-  display:inline-flex;align-items:center;gap:10px;
-  font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);
-  margin-bottom:20px
-}
-.section-eyebrow::before{content:'';width:24px;height:1px;background:var(--accent)}
-.section-title{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:clamp(36px,4.5vw,64px);
-  letter-spacing:-0.035em;line-height:0.95;
-  max-width:760px
-}
-.section-title .serif{
-  font-family:'Instrument Serif',serif;font-style:italic;
-  font-weight:400;color:var(--accent)
-}
+  /* ─── NOISE TEXTURE ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
 
-/* ─── WHAT IS CORTEX ─── */
-#what{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.what-inner{padding:120px 48px;max-width:1200px;margin:0 auto}
-.what-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:64px}
-.what-text p{font-size:17px;color:var(--muted2);line-height:1.75;margin-bottom:20px}
-.what-text p strong{color:var(--text);font-weight:500}
-.what-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-top:36px}
-.stat-cell{background:var(--bg3);padding:24px 28px}
-.stat-num{font-family:'Clash Display',sans-serif;font-weight:700;font-size:42px;letter-spacing:-0.04em;color:var(--accent);line-height:1}
-.stat-label{font-size:13px;color:var(--muted);margin-top:6px}
-.what-visual{position:relative}
+  /* ─── NAV ─── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,12,14,0.85);
+    backdrop-filter: blur(20px);
+  }
 
-/* ─── GRAPH VISUAL ─── */
-.graph-container{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:20px;padding:40px;position:relative;overflow:hidden;
-  min-height:420px;display:flex;align-items:center;justify-content:center
-}
-.graph-container::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 40%, rgba(200,255,71,0.05) 0%, transparent 65%)
-}
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
 
-/* ─── PROBLEM ─── */
-#problem{position:relative;overflow:hidden}
-#problem::before{
-  content:'';position:absolute;top:-100px;right:-200px;
-  width:600px;height:600px;
-  background:radial-gradient(circle, rgba(255,92,58,0.06) 0%, transparent 65%);
-  pointer-events:none
-}
-.problem-intro{
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;
-  align-items:start;margin-bottom:80px
-}
-.problem-intro-right{padding-top:60px;font-size:15px;color:var(--muted2);line-height:1.75}
-.problem-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:20px;overflow:hidden;border:1px solid var(--border)}
-.problem-card{background:var(--bg2);padding:40px 36px;position:relative;overflow:hidden;transition:background 0.3s}
-.problem-card:hover{background:var(--bg3)}
-.problem-card::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(to right,var(--accent3),transparent);
-  opacity:0;transition:opacity 0.3s
-}
-.problem-card:hover::after{opacity:1}
-.problem-card-num{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:64px;letter-spacing:-0.05em;
-  color:rgba(255,255,255,0.04);line-height:1;margin-bottom:20px
-}
-.problem-card-icon{
-  width:40px;height:40px;border-radius:10px;
-  background:rgba(255,92,58,0.1);border:1px solid rgba(255,92,58,0.2);
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;margin-bottom:20px
-}
-.problem-card-title{
-  font-family:'Clash Display',sans-serif;font-weight:600;
-  font-size:18px;letter-spacing:-0.02em;margin-bottom:12px
-}
-.problem-card-desc{font-size:14px;color:var(--muted2);line-height:1.7}
-.problem-bottom{margin-top:1px;background:var(--border)}
-.problem-bottom-inner{
-  background:var(--bg2);padding:48px;
-  display:flex;align-items:center;justify-content:space-between;gap:40px
-}
-.problem-quote{
-  font-family:'Instrument Serif',serif;font-style:italic;
-  font-size:clamp(20px,2.5vw,28px);line-height:1.35;flex:1;
-  letter-spacing:-0.01em
-}
-.problem-quote-line{width:1px;height:80px;background:var(--border2);flex-shrink:0}
-.problem-quote-stat{text-align:center;flex-shrink:0}
-.problem-quote-stat .big{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:52px;letter-spacing:-0.05em;color:var(--accent3);line-height:1
-}
-.problem-quote-stat .label{font-size:13px;color:var(--muted);margin-top:6px;max-width:120px}
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--em);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 16px;
+    color: #0A0C0E;
+    letter-spacing: -0.5px;
+  }
 
-/* ─── HOW IT WORKS ─── */
-#how{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.how-inner{padding:120px 48px;max-width:1200px;margin:0 auto}
-.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:20px;overflow:hidden;border:1px solid var(--border);margin-top:64px}
-.how-step{background:var(--bg3);padding:48px 36px;position:relative;overflow:hidden}
-.how-step-connector{
-  position:absolute;top:60px;right:-20px;
-  width:40px;height:1px;background:linear-gradient(to right,var(--border2),transparent);
-  z-index:2
-}
-.step-index{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:13px;letter-spacing:0.05em;
-  color:var(--accent);margin-bottom:24px;
-  display:flex;align-items:center;gap:10px
-}
-.step-index::after{content:'';flex:1;height:1px;background:rgba(200,255,71,0.2)}
-.step-visual{
-  width:100%;height:160px;background:var(--bg2);
-  border:1px solid var(--border);border-radius:12px;
-  margin-bottom:24px;overflow:hidden;position:relative;
-  display:flex;align-items:center;justify-content:center
-}
-.step-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:20px;letter-spacing:-0.02em;margin-bottom:10px}
-.step-desc{font-size:14px;color:var(--muted2);line-height:1.7}
-.pipeline-row{
-  margin-top:1px;background:var(--border)
-}
-.pipeline-inner{
-  background:var(--bg3);padding:40px 48px;
-  display:flex;align-items:center;gap:0;overflow:hidden
-}
-.pipeline-node{
-  flex:1;text-align:center;padding:20px 16px;
-  position:relative
-}
-.pipeline-node::after{
-  content:'→';
-  position:absolute;right:-8px;top:50%;transform:translateY(-50%);
-  font-size:16px;color:var(--muted);z-index:1
-}
-.pipeline-node:last-child::after{display:none}
-.pipeline-tag{
-  display:inline-block;
-  background:rgba(200,255,71,0.08);border:1px solid rgba(200,255,71,0.15);
-  color:var(--accent);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
-  padding:5px 12px;border-radius:6px;margin-bottom:10px
-}
-.pipeline-label{font-size:13px;color:var(--muted2);line-height:1.4}
+  .logo-text {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
 
-/* ─── USE CASES ─── */
-#usecases{position:relative;overflow:hidden}
-#usecases::before{
-  content:'';position:absolute;top:0;left:-200px;
-  width:700px;height:700px;
-  background:radial-gradient(circle, rgba(123,110,246,0.06) 0%, transparent 65%);
-  pointer-events:none
-}
-.usecases-tabs{display:flex;gap:4px;margin-top:48px;border-bottom:1px solid var(--border);padding-bottom:0}
-.uc-tab{
-  padding:12px 20px;font-size:13px;color:var(--muted);cursor:pointer;
-  border-bottom:2px solid transparent;transition:all 0.2s;margin-bottom:-1px;
-  font-family:'Clash Display',sans-serif;font-weight:500;letter-spacing:-0.01em
-}
-.uc-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.uc-tab:hover:not(.active){color:var(--text)}
-.uc-panels{margin-top:0}
-.uc-panel{display:none}
-.uc-panel.active{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:0 16px 16px 16px;overflow:hidden}
-.uc-main{background:var(--bg2);padding:48px}
-.uc-persona{
-  display:inline-flex;align-items:center;gap:10px;
-  background:rgba(123,110,246,0.08);border:1px solid rgba(123,110,246,0.2);
-  padding:6px 14px;border-radius:100px;margin-bottom:24px
-}
-.persona-icon{font-size:14px}
-.persona-label{font-size:12px;color:rgba(123,110,246,0.9);letter-spacing:0.04em;text-transform:uppercase}
-.uc-main-title{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:clamp(24px,3vw,36px);letter-spacing:-0.03em;line-height:1.05;margin-bottom:20px
-}
-.uc-main-desc{font-size:15px;color:var(--muted2);line-height:1.7;margin-bottom:32px}
-.uc-flow{display:flex;flex-direction:column;gap:12px}
-.uc-flow-item{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:16px;background:var(--bg3);border-radius:10px;
-  border:1px solid var(--border)
-}
-.flow-check{
-  width:20px;height:20px;border-radius:6px;
-  background:rgba(200,255,71,0.12);border:1px solid rgba(200,255,71,0.25);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:1px
-}
-.flow-check svg{width:10px;height:10px}
-.flow-text{font-size:13px;color:var(--muted2);line-height:1.5}
-.flow-text strong{color:var(--text);font-weight:500}
-.uc-demo{background:var(--bg3);padding:48px;display:flex;flex-direction:column;gap:16px}
-.demo-label{font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
-.demo-card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:12px;padding:20px;
-}
-.demo-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.demo-card-title{font-size:13px;font-weight:500;color:var(--text)}
-.demo-badge{
-  font-size:10px;letter-spacing:0.06em;text-transform:uppercase;
-  padding:3px 10px;border-radius:4px;
-}
-.badge-green{background:rgba(200,255,71,0.1);color:var(--accent);border:1px solid rgba(200,255,71,0.2)}
-.badge-orange{background:rgba(255,92,58,0.1);color:var(--accent3);border:1px solid rgba(255,92,58,0.2)}
-.badge-purple{background:rgba(123,110,246,0.1);color:#9B8EF8;border:1px solid rgba(123,110,246,0.2)}
-.demo-card-body{font-size:12px;color:var(--muted);line-height:1.6}
-.demo-card-body code{
-  display:block;background:var(--bg3);padding:10px 12px;
-  border-radius:6px;font-size:11px;color:var(--muted2);margin-top:8px;
-  font-family:monospace;border:1px solid var(--border);line-height:1.6
-}
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    list-style: none;
+  }
 
-/* ─── FEATURES ─── */
-#features{background:var(--bg2);border-top:1px solid var(--border)}
-.features-inner{padding:120px 48px;max-width:1200px;margin:0 auto}
-.features-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px}
-.features-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);
-  gap:1px;background:var(--border);
-  border:1px solid var(--border);border-radius:20px;overflow:hidden
-}
-.feat{background:var(--bg3);padding:44px;display:flex;gap:28px;transition:background 0.25s}
-.feat:hover{background:var(--surface)}
-.feat-icon-wrap{
-  width:48px;height:48px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:20px
-}
-.feat-icon-lime{background:rgba(200,255,71,0.08);border:1px solid rgba(200,255,71,0.15)}
-.feat-icon-purple{background:rgba(123,110,246,0.08);border:1px solid rgba(123,110,246,0.15)}
-.feat-icon-orange{background:rgba(255,92,58,0.08);border:1px solid rgba(255,92,58,0.15)}
-.feat-body{}
-.feat-title{font-family:'Clash Display',sans-serif;font-weight:600;font-size:18px;letter-spacing:-0.02em;margin-bottom:8px}
-.feat-desc{font-size:14px;color:var(--muted2);line-height:1.7}
-.feat-tag{
-  display:inline-block;margin-top:14px;font-size:11px;letter-spacing:0.06em;
-  text-transform:uppercase;padding:4px 10px;border-radius:5px;
-}
+  .nav-links a {
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: color 0.2s;
+  }
 
-/* ─── BRAIN DIAGRAM ─── */
-#brain-page{border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.brain-page-inner{padding:120px 48px;max-width:1200px;margin:0 auto}
-.brain-full{
-  margin-top:64px;background:var(--bg2);
-  border:1px solid var(--border);border-radius:24px;
-  overflow:hidden;position:relative;
-  display:grid;grid-template-columns:1fr 2fr;min-height:520px
-}
-.brain-full-left{
-  padding:48px;border-right:1px solid var(--border);
-  display:flex;flex-direction:column;justify-content:space-between
-}
-.brain-sources{display:flex;flex-direction:column;gap:10px;margin-top:28px}
-.source-item{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 16px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:10px;
-  font-size:13px;color:var(--muted2);transition:all 0.2s;cursor:default
-}
-.source-item:hover{border-color:var(--border2);color:var(--text)}
-.source-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.dot-lime{background:var(--accent)}
-.dot-purple{background:var(--accent2)}
-.dot-orange{background:var(--accent3)}
-.dot-blue{background:#4FADFF}
-.dot-gray{background:var(--muted)}
-.brain-canvas-area{
-  position:relative;display:flex;align-items:center;justify-content:center;padding:40px
-}
-.brain-canvas-area::before{
-  content:'';position:absolute;inset:0;
-  background:radial-gradient(circle at 50% 50%, rgba(200,255,71,0.05) 0%, transparent 60%)
-}
-.brain-outputs{
-  position:absolute;right:40px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:10px;
-}
-.output-chip{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:8px;
-  font-size:12px;color:var(--muted2);white-space:nowrap
-}
-.output-arrow{font-size:14px;color:var(--accent);margin-right:2px}
+  .nav-links a:hover { color: var(--text); }
 
-/* ─── SECURITY ─── */
-#security{position:relative;overflow:hidden}
-#security::before{
-  content:'';position:absolute;bottom:-100px;right:-100px;
-  width:500px;height:500px;
-  background:radial-gradient(circle, rgba(200,255,71,0.04) 0%, transparent 65%)
-}
-.security-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border-radius:20px;overflow:hidden;border:1px solid var(--border);margin-top:64px}
-.sec-tier{background:var(--bg2);padding:40px;position:relative}
-.sec-tier.featured{background:var(--bg3)}
-.sec-tier.featured::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(to right,transparent,var(--accent),transparent)
-}
-.sec-badge{
-  display:inline-block;margin-bottom:20px;font-size:11px;letter-spacing:0.08em;
-  text-transform:uppercase;padding:5px 12px;border-radius:6px
-}
-.sec-tier-name{font-family:'Clash Display',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em;margin-bottom:8px}
-.sec-target{font-size:13px;color:var(--muted);margin-bottom:24px}
-.sec-items{display:flex;flex-direction:column;gap:10px}
-.sec-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--muted2);line-height:1.5}
-.sec-check{color:var(--accent);flex-shrink:0;font-size:14px;margin-top:1px}
-.sec-x{color:var(--muted);flex-shrink:0;font-size:14px;margin-top:1px}
+  .nav-cta {
+    background: var(--em);
+    color: #0A0C0E !important;
+    font-weight: 600 !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 14px !important;
+    transition: opacity 0.2s !important;
+  }
 
-/* ─── CTA ─── */
-#cta-section{
-  position:relative;overflow:hidden;
-  padding:160px 48px;text-align:center;
-  border-top:1px solid var(--border)
-}
-#cta-section::before{
-  content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);
-  width:900px;height:700px;
-  background:radial-gradient(ellipse, rgba(200,255,71,0.07) 0%, transparent 65%)
-}
-.cta-inner{position:relative;z-index:2;max-width:700px;margin:0 auto}
-.cta-title{
-  font-family:'Clash Display',sans-serif;font-weight:700;
-  font-size:clamp(48px,7vw,96px);
-  letter-spacing:-0.045em;line-height:0.9;margin-bottom:32px
-}
-.cta-title .serif{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--accent)}
-.cta-sub{font-size:17px;color:var(--muted2);margin-bottom:48px;line-height:1.6}
-.waitlist-form{display:flex;max-width:460px;margin:0 auto}
-.waitlist-form input{
-  flex:1;background:var(--bg3);border:1px solid var(--border2);border-right:none;
-  padding:15px 20px;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);
-  outline:none;border-radius:9px 0 0 9px;transition:border-color 0.2s
-}
-.waitlist-form input::placeholder{color:var(--muted)}
-.waitlist-form input:focus{border-color:rgba(200,255,71,0.35)}
-.waitlist-form button{
-  background:var(--accent);color:#06060A;border:none;
-  padding:15px 24px;font-family:'Clash Display',sans-serif;
-  font-weight:600;font-size:13px;letter-spacing:-0.01em;
-  cursor:pointer;border-radius:0 9px 9px 0;white-space:nowrap;
-  transition:opacity 0.2s
-}
-.waitlist-form button:hover{opacity:0.85}
-.waitlist-note{margin-top:16px;font-size:12px;color:var(--muted)}
-.success-state{display:none;margin-top:24px;animation:fadeUp 0.4s ease both}
-.success-state p{font-size:15px;color:var(--accent)}
+  .nav-cta:hover { opacity: 0.85; }
 
-/* ─── FOOTER ─── */
-footer{
-  padding:40px 48px;
-  border-top:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between
-}
-.footer-left{display:flex;align-items:center;gap:32px}
-.footer-links{display:flex;gap:20px}
-.footer-links a{font-size:12px;color:var(--muted);text-decoration:none;transition:color 0.2s;letter-spacing:0.02em}
-.footer-links a:hover{color:var(--text)}
-.footer-right p{font-size:12px;color:var(--muted)}
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    overflow: hidden;
+  }
 
-/* ─── ANIMATIONS ─── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(28px);transition:opacity 0.8s ease,transform 0.8s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-delay-1{transition-delay:0.1s}
-.reveal-delay-2{transition-delay:0.2s}
-.reveal-delay-3{transition-delay:0.3s}
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(16,185,129,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
 
-/* ─── CONTEXT LAYER ─── */
-#context-layer{background:var(--bg);border-top:1px solid var(--border);border-bottom:1px solid var(--border);position:relative;overflow:hidden}
-#context-layer::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(123,110,246,0.06) 0%,transparent 65%);pointer-events:none}
-.context-inner{padding:120px 48px;max-width:1200px;margin:0 auto}
-.context-diagram{margin-top:64px;position:relative}
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 100%);
+    pointer-events: none;
+  }
 
-.ctx-flow{display:grid;grid-template-columns:1fr 80px 1fr 80px 1fr;align-items:center;gap:0;margin-bottom:48px}
-.ctx-arrow{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
-.ctx-arrow-line{width:100%;height:1px;background:linear-gradient(to right,rgba(200,255,71,0.3),rgba(200,255,71,0.1));position:relative}
-.ctx-arrow-line::after{content:'▶';position:absolute;right:-6px;top:-6px;font-size:10px;color:rgba(200,255,71,0.4)}
-.ctx-arrow-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--em-dim);
+    border: 1px solid var(--border-em);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--em);
+    letter-spacing: 0.5px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
 
-.ctx-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;text-align:center}
-.ctx-box-title{font-family:'Clash Display',sans-serif;font-weight:700;font-size:15px;letter-spacing:-0.02em;margin-bottom:6px}
-.ctx-box-sub{font-size:12px;color:var(--muted);line-height:1.5}
-.ctx-box.brain{border-color:rgba(200,255,71,0.3);background:rgba(200,255,71,0.04);position:relative}
-.ctx-box.brain::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(200,255,71,0.2),transparent 60%);z-index:-1}
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--em);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
 
-.ctx-tools-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:20px;overflow:hidden}
-.ctx-tool{background:var(--bg2);padding:32px 28px;transition:background 0.25s;position:relative;overflow:hidden}
-.ctx-tool:hover{background:var(--bg3)}
-.ctx-tool::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity 0.3s}
-.ctx-tool:hover::before{opacity:1}
-.ctx-tool.lime::before{background:linear-gradient(to right,var(--accent),transparent)}
-.ctx-tool.purple::before{background:linear-gradient(to right,var(--accent2),transparent)}
-.ctx-tool.orange::before{background:linear-gradient(to right,var(--accent3),transparent)}
-.ctx-tool.blue::before{background:linear-gradient(to right,#4FADFF,transparent)}
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
 
-.ctx-tool-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
-.ctx-tool-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.ctx-tool-name{font-family:'Clash Display',sans-serif;font-weight:600;font-size:15px;letter-spacing:-0.02em}
-.ctx-tool-desc{font-size:13px;color:var(--muted2);line-height:1.65;margin-bottom:16px}
-.ctx-tool-examples{display:flex;flex-direction:column;gap:7px}
-.ctx-example{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--muted);line-height:1.45}
-.ctx-example-dot{width:4px;height:4px;border-radius:50%;margin-top:5px;flex-shrink:0}
+  .hero h1 {
+    font-family: var(--font-head);
+    font-size: clamp(42px, 6vw, 76px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -2px;
+    max-width: 900px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
 
-.ctx-center-label{
-  text-align:center;margin:48px 0;
-  font-family:'Instrument Serif',serif;font-style:italic;
-  font-size:clamp(20px,2.5vw,30px);color:var(--muted2);line-height:1.5
-}
-.ctx-center-label strong{color:var(--text);font-style:normal;font-family:'Clash Display',sans-serif;font-weight:700}
+  .hero h1 em {
+    font-style: normal;
+    color: var(--em);
+  }
 
-.ctx-api-strip{
-  margin-top:1px;background:var(--border);border-radius:0 0 20px 20px;overflow:hidden
-}
-.ctx-api-inner{
-  background:var(--bg3);padding:32px 40px;
-  display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap
-}
-.ctx-api-left{display:flex;align-items:center;gap:16px}
-.ctx-api-badge{
-  background:rgba(200,255,71,0.08);border:1px solid rgba(200,255,71,0.2);
-  color:var(--accent);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
-  padding:6px 14px;border-radius:6px;white-space:nowrap
-}
-.ctx-api-text{font-size:14px;color:var(--muted2);line-height:1.6}
-.ctx-api-text strong{color:var(--text);font-weight:500}
-.ctx-code{
-  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  padding:14px 20px;font-family:monospace;font-size:12px;color:var(--muted2);
-  white-space:nowrap;letter-spacing:0.02em
-}
-.ctx-code span{color:var(--accent)}
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--text-2);
+    max-width: 580px;
+    line-height: 1.6;
+    margin-bottom: 48px;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
 
-/* ─── RESPONSIVE ─── */
-@media(max-width:900px){
-  #nav{padding:0 20px}
-  .nav-links{display:none}
-  .ctx-flow{grid-template-columns:1fr;gap:16px}
-  .ctx-arrow{flex-direction:row;padding:8px 0}
-  .ctx-arrow-line{height:1px;width:40px}
-  .ctx-arrow-line::after{right:-6px;top:-6px}
-  .ctx-tools-grid{grid-template-columns:1fr 1fr}
-  .ctx-api-inner{flex-direction:column;align-items:flex-start}
-  .ctx-code{font-size:11px;overflow-x:auto;max-width:100%}
-  .what-grid,.problem-intro,.how-steps,.features-grid,.security-grid{grid-template-columns:1fr}
-  .brain-full{grid-template-columns:1fr}
-  .brain-canvas-area{min-height:300px}
-  .uc-panel.active{grid-template-columns:1fr}
-  .problem-bottom-inner{flex-direction:column}
-  #cta-section{padding:100px 20px}
-  footer{flex-direction:column;gap:20px;text-align:center;padding:32px 20px}
-  .usecases-tabs{overflow-x:auto}
-}
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--em);
+    color: #0A0C0E;
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 28px;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover {
+    background: #0EA572;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+  }
+
+  .btn-secondary {
+    color: var(--text-2);
+    font-size: 15px;
+    padding: 14px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    background: transparent;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-secondary:hover {
+    color: var(--text);
+    border-color: rgba(255,255,255,0.15);
+    background: var(--bg3);
+  }
+
+  /* ─── PIPELINE VISUAL ─── */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-top: 72px;
+    animation: fadeUp 0.6s 0.4s ease both;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .pipe-node {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-2);
+    white-space: nowrap;
+  }
+
+  .pipe-node.brain {
+    background: var(--em-dim);
+    border-color: var(--border-em);
+    color: var(--em);
+    font-weight: 500;
+  }
+
+  .pipe-arrow {
+    color: var(--text-3);
+    font-size: 14px;
+    padding: 0 4px;
+  }
+
+  /* ─── SECTIONS ─── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--em);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .section-body {
+    font-size: 17px;
+    color: var(--text-2);
+    max-width: 600px;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ─── PROBLEM ─── */
+  .problem {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    margin-top: 64px;
+  }
+
+  .problem-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .problem-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .problem-card:hover {
+    border-color: rgba(255,255,255,0.12);
+  }
+
+  .problem-icon {
+    font-size: 20px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .problem-card h4 {
+    font-family: var(--font-head);
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+  }
+
+  .problem-card p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+
+  .problem-statement {
+    position: sticky;
+    top: 100px;
+  }
+
+  .problem-quote {
+    margin-top: 40px;
+    padding: 28px;
+    background: var(--em-glow);
+    border: 1px solid var(--border-em);
+    border-radius: 12px;
+  }
+
+  .problem-quote p {
+    font-size: 15px;
+    color: var(--text-2);
+    line-height: 1.7;
+    font-style: italic;
+  }
+
+  .problem-quote strong {
+    color: var(--em);
+    font-style: normal;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .how {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-top: 64px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .how-step {
+    background: var(--bg2);
+    padding: 40px 32px;
+    position: relative;
+    transition: background 0.2s;
+  }
+
+  .how-step:hover { background: var(--bg3); }
+
+  .how-step:not(:last-child) {
+    border-right: 1px solid var(--border);
+  }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .step-icon-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+
+  .step-tag {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+  }
+
+  .step-tag.active {
+    background: var(--em-dim);
+    border-color: var(--border-em);
+    color: var(--em);
+  }
+
+  .how-step h3 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+
+  .how-step p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+
+  /* ─── BRAIN VISUAL ─── */
+  .brain-visual {
+    margin-top: 48px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .brain-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(16,185,129,0.05) 0%, transparent 70%);
+  }
+
+  .bv-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .bv-node {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-3);
+    white-space: nowrap;
+    transition: all 0.3s;
+  }
+
+  .bv-node:hover {
+    border-color: var(--border-em);
+    color: var(--em);
+  }
+
+  .bv-center {
+    margin: 0 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .bv-brain {
+    width: 100px; height: 100px;
+    background: var(--em-dim);
+    border: 2px solid var(--em);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--em);
+    letter-spacing: -0.3px;
+    box-shadow: 0 0 40px rgba(16,185,129,0.2);
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { box-shadow: 0 0 40px rgba(16,185,129,0.2); }
+    50% { box-shadow: 0 0 60px rgba(16,185,129,0.35); }
+  }
+
+  .bv-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--em);
+    letter-spacing: 1px;
+  }
+
+  .bv-arrow {
+    color: var(--text-3);
+    font-size: 20px;
+    margin: 0 16px;
+  }
+
+  .bv-output {
+    background: var(--em-dim);
+    border: 1px solid var(--border-em);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em);
+    white-space: nowrap;
+  }
+
+  /* ─── USE CASES ─── */
+  .usecases {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .usecase-tabs {
+    display: flex;
+    gap: 4px;
+    margin-top: 48px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    width: fit-content;
+  }
+
+  .tab-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    font-family: var(--font-body);
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--em);
+    color: #0A0C0E;
+    font-weight: 600;
+  }
+
+  .usecase-panels {
+    margin-top: 24px;
+  }
+
+  .usecase-panel {
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .usecase-panel.active {
+    display: grid;
+  }
+
+  .uc-info h3 {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.8px;
+    margin-bottom: 16px;
+  }
+
+  .uc-info p {
+    font-size: 16px;
+    color: var(--text-2);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+
+  .uc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .uc-list li {
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-2);
+    align-items: flex-start;
+  }
+
+  .uc-list li::before {
+    content: '→';
+    color: var(--em);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .uc-demo {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .uc-demo-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .demo-dot {
+    width: 10px; height: 10px;
+    background: var(--em);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .demo-title {
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .demo-query {
+    color: var(--text-2);
+    margin-bottom: 16px;
+    padding: 12px;
+    background: var(--bg);
+    border-radius: 8px;
+    border-left: 2px solid var(--border-em);
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .demo-response {
+    color: var(--em);
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .demo-response span {
+    color: var(--text-3);
+  }
+
+  /* ─── INTEGRATIONS ─── */
+  .integrations {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .int-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    margin-top: 64px;
+    align-items: center;
+  }
+
+  .int-tools {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .int-tool {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-2);
+    transition: all 0.2s;
+    cursor: default;
+  }
+
+  .int-tool:hover {
+    border-color: var(--border-em);
+    color: var(--text);
+    background: var(--bg3);
+  }
+
+  .int-tool-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+
+  .int-center {
+    grid-column: span 3;
+    background: var(--em-dim);
+    border: 1px solid var(--border-em);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em);
+  }
+
+  .api-block {
+    margin-top: 32px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .api-block-header {
+    font-size: 11px;
+    color: var(--text-3);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .api-line { line-height: 2; }
+  .api-method { color: var(--em); }
+  .api-path { color: var(--text-2); }
+  .api-key { color: #60A5FA; }
+  .api-val { color: #F59E0B; }
+
+  /* ─── MOAT ─── */
+  .moat {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .moat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 64px;
+  }
+
+  .moat-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 28px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .moat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--em), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .moat-card:hover::before { opacity: 1; }
+  .moat-card:hover { border-color: rgba(255,255,255,0.12); transform: translateY(-2px); }
+
+  .moat-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .moat-card h3 {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: -0.4px;
+    margin-bottom: 10px;
+  }
+
+  .moat-card p {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.65;
+  }
+
+  /* ─── CTA / WAITLIST ─── */
+  .cta-section {
+    padding: 120px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-glow {
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 300px;
+    background: radial-gradient(ellipse, rgba(16,185,129,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    font-family: var(--font-head);
+    font-size: clamp(36px, 5vw, 60px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+  }
+
+  .cta-section p {
+    font-size: 18px;
+    color: var(--text-2);
+    margin-bottom: 48px;
+    font-weight: 300;
+  }
+
+  /* ─── FORM ─── */
+  .waitlist-form {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 560px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: var(--font-body);
+    transition: border-color 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  .form-group input::placeholder,
+  .form-group textarea::placeholder {
+    color: var(--text-3);
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--em);
+  }
+
+  .form-group select {
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .form-group select option {
+    background: var(--bg3);
+  }
+
+  .form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.5;
+  }
+
+  .form-submit {
+    width: 100%;
+    background: var(--em);
+    color: #0A0C0E;
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 16px;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+    letter-spacing: -0.3px;
+  }
+
+  .form-submit:hover {
+    background: #0EA572;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+  }
+
+  .form-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 16px;
+  }
+
+  .form-success {
+    display: none;
+    text-align: center;
+    padding: 40px;
+  }
+
+  .form-success h3 {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .form-success p {
+    color: var(--text-2);
+    font-size: 15px;
+  }
+
+  .success-icon {
+    width: 56px; height: 56px;
+    background: var(--em-dim);
+    border: 2px solid var(--em);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 20px;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-text {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--text-3);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text-2); }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .problem-grid, .int-grid, .usecase-panel.active { grid-template-columns: 1fr; }
+    .how-steps { grid-template-columns: 1fr; }
+    .how-step:not(:last-child) { border-right: none; border-bottom: 1px solid var(--border); }
+    .moat-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+    .waitlist-form { padding: 24px 20px; }
+    .int-tools { grid-template-columns: repeat(2, 1fr); }
+  }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
-<nav id="nav">
+<nav>
   <a href="#" class="nav-logo">
-    <div class="nav-logo-mark">C</div>
-    <span class="nav-logo-text">Cortex</span>
+    <div class="logo-mark">C</div>
+    <span class="logo-text">Cortex</span>
   </a>
-  <div class="nav-links">
-    <a href="#what" class="nav-link">Product</a>
-    <a href="#problem" class="nav-link">Problem</a>
-    <a href="#how" class="nav-link">How it works</a>
-    <a href="#usecases" class="nav-link">Use cases</a>
-    <a href="#context-layer" class="nav-link">Integrations</a>
-    <a href="#security" class="nav-link">Security</a>
-    <a href="#cta-section" class="nav-cta">Join waitlist</a>
-  </div>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#usecases">Use cases</a></li>
+    <li><a href="#waitlist" class="nav-cta">Get pre-access →</a></li>
+  </ul>
 </nav>
 
-<!-- ═══════════════════════════════════════ HERO ═══ -->
-<section id="hero">
-  <canvas id="neural-canvas"></canvas>
-  <div class="hero-inner">
-    <div class="hero-pill">
-      <span class="live-dot"></span>
-      Now in private beta &nbsp;·&nbsp; 400+ on waitlist
-    </div>
-    <h1 class="hero-h1">
-      Your product's
-      <span class="line2">living brain.</span>
-    </h1>
-    <p class="hero-sub">
-      Cortex ingests your codebase, docs, and PRs — building a persistent knowledge graph that powers every decision your product team makes.
-    </p>
-    <div class="hero-actions">
-      <a href="#cta-section" class="btn-primary">
-        Join the waitlist
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-      <a href="#how" class="btn-secondary">See how it works</a>
-    </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-line"></div>
-    <span>scroll</span>
-  </div>
-</section>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
 
-<!-- ═══════════════════════════════════ WHAT IS CORTEX ═══ -->
-<div id="what">
-  <div class="what-inner">
-    <p class="section-eyebrow reveal">What is Cortex</p>
-    <h2 class="section-title reveal">Not a wiki. Not a search tool.<br><span class="serif">A brain that thinks.</span></h2>
+  <span class="badge">
+    <span class="badge-dot"></span>
+    Pre-access now open · First cohort is small
+  </span>
 
-    <div class="what-grid">
-      <div class="what-text reveal">
-        <p>Most product teams suffer from the same problem: <strong>context dies at every handoff.</strong> Engineers forget why things were built. PMs write specs blind. New hires take months to onboard.</p>
-        <p>Cortex is an <strong>AI-native product knowledge graph</strong> that ingests your entire development artifact stack — code, PRDs, GitHub PRs, Notion docs — and synthesises it into structured, queryable memory.</p>
-        <p>Not a document store. Not a chat over your files. A <strong>living model of your product</strong> that knows what exists, why it was built, what's at risk, and what's missing.</p>
+  <h1>Your team has years of knowledge.<br/><em>Your AI tools have none of it.</em></h1>
 
-        <div class="what-stats">
-          <div class="stat-cell">
-            <div class="stat-num">73%</div>
-            <div class="stat-label">of engineering decisions lack documented rationale</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-num">4.2x</div>
-            <div class="stat-label">faster PRD creation with codebase context</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-num">~3wk</div>
-            <div class="stat-label">average engineering onboarding time, reducible to days</div>
-          </div>
-          <div class="stat-cell">
-            <div class="stat-num">68%</div>
-            <div class="stat-label">of duplicate features built due to missing context</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="what-visual reveal reveal-delay-2">
-        <div class="graph-container">
-          <svg width="320" height="340" viewBox="0 0 320 340" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Outer ring connections -->
-            <line x1="160" y1="170" x2="50" y2="60" stroke="rgba(200,255,71,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="160" y1="170" x2="270" y2="60" stroke="rgba(200,255,71,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="160" y1="170" x2="30" y2="185" stroke="rgba(200,255,71,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="160" y1="170" x2="290" y2="185" stroke="rgba(200,255,71,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="160" y1="170" x2="80" y2="300" stroke="rgba(200,255,71,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="160" y1="170" x2="240" y2="300" stroke="rgba(200,255,71,0.15)" stroke-width="1" stroke-dasharray="3 5"/>
-            <line x1="160" y1="170" x2="160" y2="30" stroke="rgba(200,255,71,0.1)" stroke-width="1" stroke-dasharray="3 5"/>
-
-            <!-- Animated pulse rings on center -->
-            <circle cx="160" cy="170" r="70" stroke="rgba(200,255,71,0.06)" stroke-width="1">
-              <animate attributeName="r" values="60;75;60" dur="4s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.06;0.02;0.06" dur="4s" repeatCount="indefinite"/>
-            </circle>
-            <circle cx="160" cy="170" r="85" stroke="rgba(200,255,71,0.04)" stroke-width="1">
-              <animate attributeName="r" values="85;100;85" dur="4s" begin="1s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.04;0.01;0.04" dur="4s" begin="1s" repeatCount="indefinite"/>
-            </circle>
-
-            <!-- Source nodes -->
-            <!-- GitHub -->
-            <g transform="translate(50,60)">
-              <rect x="-28" y="-28" width="56" height="56" rx="12" fill="rgba(200,255,71,0.05)" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <text y="-6" text-anchor="middle" fill="rgba(200,255,71,0.7)" font-size="10" font-family="'Clash Display',sans-serif" font-weight="600">GIT</text>
-              <text y="7" text-anchor="middle" fill="rgba(200,255,71,0.3)" font-size="7" font-family="Inter,sans-serif">commits</text>
-            </g>
-            <!-- Figma -->
-            <g transform="translate(270,60)">
-              <rect x="-28" y="-28" width="56" height="56" rx="12" fill="rgba(123,110,246,0.05)" stroke="rgba(123,110,246,0.2)" stroke-width="1"/>
-              <text y="-6" text-anchor="middle" fill="rgba(123,110,246,0.7)" font-size="10" font-family="'Clash Display',sans-serif" font-weight="600">FIGMA</text>
-              <text y="7" text-anchor="middle" fill="rgba(123,110,246,0.3)" font-size="7" font-family="Inter,sans-serif">designs</text>
-            </g>
-            <!-- Notion -->
-            <g transform="translate(30,185)">
-              <rect x="-28" y="-28" width="56" height="56" rx="12" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-              <text y="-6" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">NOTION</text>
-              <text y="7" text-anchor="middle" fill="rgba(255,255,255,0.3)" font-size="7" font-family="Inter,sans-serif">docs</text>
-            </g>
-            <!-- PRs -->
-            <g transform="translate(290,185)">
-              <rect x="-28" y="-28" width="56" height="56" rx="12" fill="rgba(255,92,58,0.05)" stroke="rgba(255,92,58,0.2)" stroke-width="1"/>
-              <text y="-6" text-anchor="middle" fill="rgba(255,92,58,0.7)" font-size="10" font-family="'Clash Display',sans-serif" font-weight="600">PRs</text>
-              <text y="7" text-anchor="middle" fill="rgba(255,92,58,0.3)" font-size="7" font-family="Inter,sans-serif">context</text>
-            </g>
-            <!-- OKRs -->
-            <g transform="translate(80,300)">
-              <rect x="-28" y="-28" width="56" height="56" rx="12" fill="rgba(79,173,255,0.05)" stroke="rgba(79,173,255,0.2)" stroke-width="1"/>
-              <text y="-6" text-anchor="middle" fill="rgba(79,173,255,0.7)" font-size="10" font-family="'Clash Display',sans-serif" font-weight="600">OKRs</text>
-              <text y="7" text-anchor="middle" fill="rgba(79,173,255,0.3)" font-size="7" font-family="Inter,sans-serif">goals</text>
-            </g>
-            <!-- Slack -->
-            <g transform="translate(240,300)">
-              <rect x="-28" y="-28" width="56" height="56" rx="12" fill="rgba(200,255,71,0.04)" stroke="rgba(200,255,71,0.15)" stroke-width="1"/>
-              <text y="-6" text-anchor="middle" fill="rgba(200,255,71,0.5)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">SLACK</text>
-              <text y="7" text-anchor="middle" fill="rgba(200,255,71,0.25)" font-size="7" font-family="Inter,sans-serif">threads</text>
-            </g>
-            <!-- PRD -->
-            <g transform="translate(160,30)">
-              <rect x="-24" y="-20" width="48" height="40" rx="10" fill="rgba(200,255,71,0.05)" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <text y="5" text-anchor="middle" fill="rgba(200,255,71,0.6)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">PRDs</text>
-            </g>
-
-            <!-- Central cortex node -->
-            <circle cx="160" cy="170" r="48" fill="rgba(200,255,71,0.04)" stroke="rgba(200,255,71,0.25)" stroke-width="1.5"/>
-            <circle cx="160" cy="170" r="36" fill="rgba(200,255,71,0.07)" stroke="rgba(200,255,71,0.4)" stroke-width="1"/>
-            <text x="160" y="165" text-anchor="middle" fill="#C8FF47" font-size="12" font-family="'Clash Display',sans-serif" font-weight="700" letter-spacing="0.5">CORTEX</text>
-            <text x="160" y="180" text-anchor="middle" fill="rgba(200,255,71,0.45)" font-size="8" font-family="Inter,sans-serif">brain</text>
-          </svg>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════ PROBLEM ═══ -->
-<section id="problem" class="page-section">
-  <div class="problem-intro">
-    <div>
-      <p class="section-eyebrow reveal">The problem</p>
-      <h2 class="section-title reveal">Context is your<br><span class="serif">most valuable asset.</span><br>You're losing it daily.</h2>
-    </div>
-    <div class="problem-intro-right reveal">
-      <p>Every product team runs on tribal knowledge. The engineer who built the checkout flow left. The PM who wrote that PRD is in a different squad. The Slack thread with the architectural decision is buried 6 months deep.</p>
-      <br>
-      <p>This isn't a documentation problem. It's a <strong style="color:var(--text)">structural memory problem.</strong> And it gets exponentially worse as your team scales.</p>
-    </div>
-  </div>
-
-  <div class="problem-cards reveal">
-    <div class="problem-card">
-      <div class="problem-card-num">01</div>
-      <div class="problem-card-icon">🧠</div>
-      <div class="problem-card-title">Context lives in people's heads</div>
-      <div class="problem-card-desc">Architectural decisions, edge case reasoning, product tradeoffs — all locked inside individual team members. One departure and it's gone.</div>
-    </div>
-    <div class="problem-card">
-      <div class="problem-card-num">02</div>
-      <div class="problem-card-icon">📝</div>
-      <div class="problem-card-title">PRDs written in a vacuum</div>
-      <div class="problem-card-desc">PMs write requirements without visibility into what the codebase already supports. Duplicate features get built. Impossible asks go undetected until sprint planning.</div>
-    </div>
-    <div class="problem-card">
-      <div class="problem-card-num">03</div>
-      <div class="problem-card-icon">🔀</div>
-      <div class="problem-card-title">Every handoff breaks the chain</div>
-      <div class="problem-card-desc">Design → Engineering → QA → Launch. Each transition degrades fidelity. Intent diverges from implementation. Nobody has the full picture.</div>
-    </div>
-    <div class="problem-card">
-      <div class="problem-card-num">04</div>
-      <div class="problem-card-icon">⏱</div>
-      <div class="problem-card-title">Onboarding burns weeks</div>
-      <div class="problem-card-desc">New engineers spend their first month asking questions that should have answers. Senior engineers spend that same month answering them instead of shipping.</div>
-    </div>
-    <div class="problem-card">
-      <div class="problem-card-num">05</div>
-      <div class="problem-card-icon">💥</div>
-      <div class="problem-card-title">Changes break things nobody predicted</div>
-      <div class="problem-card-desc">Without a map of dependencies and change risks, every sprint is a gamble. The thing that breaks is always the thing nobody thought was connected.</div>
-    </div>
-    <div class="problem-card">
-      <div class="problem-card-num">06</div>
-      <div class="problem-card-icon">🌀</div>
-      <div class="problem-card-title">Tools create silos, not memory</div>
-      <div class="problem-card-desc">Notion, Jira, GitHub, Figma, Slack — each captures a fragment. No tool connects them. The full picture of your product exists nowhere.</div>
-    </div>
-  </div>
-
-  <div style="background:var(--border);margin-top:1px;border-radius:0 0 20px 20px;overflow:hidden">
-    <div class="problem-bottom-inner reveal">
-      <p class="problem-quote">"The real cost isn't building the wrong feature — it's building the right feature <em>twice</em> because nobody knew it already existed."</p>
-      <div class="problem-quote-line"></div>
-      <div class="problem-quote-stat">
-        <div class="big">$31K</div>
-        <div class="label">avg cost per duplicate feature built in a mid-size team</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════ HOW IT WORKS ═══ -->
-<div id="how">
-  <div class="how-inner">
-    <p class="section-eyebrow reveal">How it works</p>
-    <h2 class="section-title reveal">Three steps to a<br><span class="serif">brain that never forgets.</span></h2>
-
-    <div class="how-steps reveal">
-      <div class="how-step">
-        <div class="step-index">STEP 01</div>
-        <div class="step-visual">
-          <svg width="200" height="130" viewBox="0 0 200 130" fill="none">
-            <!-- Source icons flowing in -->
-            <rect x="10" y="20" width="36" height="28" rx="6" fill="rgba(200,255,71,0.06)" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-            <text x="28" y="38" text-anchor="middle" fill="rgba(200,255,71,0.6)" font-size="8" font-family="'Clash Display',sans-serif" font-weight="600">CODE</text>
-            <rect x="10" y="58" width="36" height="28" rx="6" fill="rgba(123,110,246,0.06)" stroke="rgba(123,110,246,0.2)" stroke-width="1"/>
-            <text x="28" y="76" text-anchor="middle" fill="rgba(123,110,246,0.6)" font-size="8" font-family="'Clash Display',sans-serif" font-weight="600">DOCS</text>
-            <rect x="10" y="96" width="36" height="28" rx="6" fill="rgba(255,92,58,0.06)" stroke="rgba(255,92,58,0.2)" stroke-width="1"/>
-            <text x="28" y="114" text-anchor="middle" fill="rgba(255,92,58,0.6)" font-size="8" font-family="'Clash Display',sans-serif" font-weight="600">PRs</text>
-            <!-- Arrows -->
-            <line x1="46" y1="34" x2="90" y2="65" stroke="rgba(200,255,71,0.2)" stroke-width="1" stroke-dasharray="3 4"/>
-            <line x1="46" y1="72" x2="90" y2="65" stroke="rgba(123,110,246,0.2)" stroke-width="1" stroke-dasharray="3 4"/>
-            <line x1="46" y1="110" x2="90" y2="65" stroke="rgba(255,92,58,0.2)" stroke-width="1" stroke-dasharray="3 4"/>
-            <!-- Connector box -->
-            <rect x="90" y="45" width="48" height="40" rx="8" fill="rgba(200,255,71,0.08)" stroke="rgba(200,255,71,0.3)" stroke-width="1"/>
-            <text x="114" y="68" text-anchor="middle" fill="rgba(200,255,71,0.8)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">INGEST</text>
-            <!-- Output arrow -->
-            <line x1="138" y1="65" x2="160" y2="65" stroke="rgba(200,255,71,0.3)" stroke-width="1"/>
-            <polygon points="160,61 168,65 160,69" fill="rgba(200,255,71,0.4)"/>
-          </svg>
-        </div>
-        <div class="step-title">Connect your sources</div>
-        <div class="step-desc">Link your GitHub repo, Notion workspace, Figma files, and PRD documents. Cortex handles the ingestion — you set the scope, we do the rest.</div>
-      </div>
-      <div class="how-step">
-        <div class="step-index">STEP 02</div>
-        <div class="step-visual">
-          <svg width="200" height="130" viewBox="0 0 200 130" fill="none">
-            <!-- Knowledge graph nodes -->
-            <circle cx="100" cy="65" r="22" fill="rgba(200,255,71,0.06)" stroke="rgba(200,255,71,0.3)" stroke-width="1.5"/>
-            <text x="100" y="62" text-anchor="middle" fill="rgba(200,255,71,0.8)" font-size="8" font-family="'Clash Display',sans-serif" font-weight="700">BRAIN</text>
-            <text x="100" y="74" text-anchor="middle" fill="rgba(200,255,71,0.4)" font-size="6" font-family="Inter,sans-serif">memory</text>
-            <!-- Satellite nodes -->
-            <circle cx="44" cy="35" r="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <text x="44" y="38" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="6" font-family="Inter,sans-serif">entities</text>
-            <circle cx="156" cy="35" r="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <text x="156" y="38" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="6" font-family="Inter,sans-serif">decisions</text>
-            <circle cx="38" cy="95" r="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <text x="38" y="98" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="6" font-family="Inter,sans-serif">risks</text>
-            <circle cx="162" cy="95" r="14" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <text x="162" y="98" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="6" font-family="Inter,sans-serif">gaps</text>
-            <!-- Connection lines -->
-            <line x1="78" y1="52" x2="56" y2="43" stroke="rgba(200,255,71,0.15)" stroke-width="1"/>
-            <line x1="122" y1="52" x2="144" y2="43" stroke="rgba(200,255,71,0.15)" stroke-width="1"/>
-            <line x1="82" y1="80" x2="52" y2="88" stroke="rgba(200,255,71,0.15)" stroke-width="1"/>
-            <line x1="118" y1="80" x2="148" y2="88" stroke="rgba(200,255,71,0.15)" stroke-width="1"/>
-          </svg>
-        </div>
-        <div class="step-title">Build the knowledge graph</div>
-        <div class="step-desc">AI synthesises raw artifacts into structured memory — entities, architectural decisions, dependency maps, change risk signals, and undocumented gaps.</div>
-      </div>
-      <div class="how-step">
-        <div class="step-index">STEP 03</div>
-        <div class="step-visual">
-          <svg width="200" height="130" viewBox="0 0 200 130" fill="none">
-            <!-- Query interface -->
-            <rect x="20" y="20" width="160" height="28" rx="8" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <circle cx="36" cy="34" r="5" fill="rgba(200,255,71,0.2)" stroke="rgba(200,255,71,0.4)" stroke-width="1"/>
-            <rect x="46" y="29" width="80" height="10" rx="3" fill="rgba(255,255,255,0.06)"/>
-            <!-- Response cards -->
-            <rect x="20" y="60" width="74" height="52" rx="7" fill="rgba(200,255,71,0.04)" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-            <text x="57" y="78" text-anchor="middle" fill="rgba(200,255,71,0.6)" font-size="7" font-family="'Clash Display',sans-serif" font-weight="600">PRD</text>
-            <rect x="29" y="84" width="36" height="3" rx="1" fill="rgba(200,255,71,0.1)"/>
-            <rect x="29" y="91" width="28" height="3" rx="1" fill="rgba(200,255,71,0.07)"/>
-            <rect x="29" y="98" width="32" height="3" rx="1" fill="rgba(200,255,71,0.05)"/>
-
-            <rect x="104" y="60" width="74" height="52" rx="7" fill="rgba(123,110,246,0.04)" stroke="rgba(123,110,246,0.2)" stroke-width="1"/>
-            <text x="141" y="78" text-anchor="middle" fill="rgba(123,110,246,0.6)" font-size="7" font-family="'Clash Display',sans-serif" font-weight="600">INTAKE</text>
-            <rect x="113" y="84" width="36" height="3" rx="1" fill="rgba(123,110,246,0.1)"/>
-            <rect x="113" y="91" width="28" height="3" rx="1" fill="rgba(123,110,246,0.07)"/>
-            <rect x="113" y="98" width="32" height="3" rx="1" fill="rgba(123,110,246,0.05)"/>
-          </svg>
-        </div>
-        <div class="step-title">Query, generate, automate</div>
-        <div class="step-desc">Ask anything. Generate context-aware PRDs. Auto-triage feature requests. Get change risk assessments before every sprint. Brain stays current on every merge.</div>
-      </div>
-    </div>
-
-    <!-- Pipeline bar -->
-    <div class="pipeline-row reveal" style="background:var(--border);margin-top:1px;border-radius:0 0 20px 20px;overflow:hidden">
-      <div class="pipeline-inner">
-        <div class="pipeline-node">
-          <div class="pipeline-tag">Source</div>
-          <div class="pipeline-label">Code + Docs + PRs + OKRs</div>
-        </div>
-        <div class="pipeline-node">
-          <div class="pipeline-tag">Extract</div>
-          <div class="pipeline-label">Gemini 2.5 Flash per-source</div>
-        </div>
-        <div class="pipeline-node">
-          <div class="pipeline-tag">Synthesise</div>
-          <div class="pipeline-label">Claude merges into unified graph</div>
-        </div>
-        <div class="pipeline-node">
-          <div class="pipeline-tag">Store</div>
-          <div class="pipeline-label">Structured JSON Brain</div>
-        </div>
-        <div class="pipeline-node">
-          <div class="pipeline-tag">Serve</div>
-          <div class="pipeline-label">PRD · Intake · Query · Alerts</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════ USE CASES ═══ -->
-<section id="usecases" class="page-section">
-  <p class="section-eyebrow reveal">Use cases</p>
-  <h2 class="section-title reveal">Built for every role<br><span class="serif">in the product team.</span></h2>
-
-  <div class="usecases-tabs reveal" style="margin-top:48px">
-    <div class="uc-tab active" onclick="switchTab('pm')">Product Manager</div>
-    <div class="uc-tab" onclick="switchTab('eng')">Engineering Lead</div>
-    <div class="uc-tab" onclick="switchTab('founder')">Founder / Startup</div>
-    <div class="uc-tab" onclick="switchTab('new')">New Team Member</div>
-  </div>
-
-  <div class="uc-panels">
-    <!-- PM -->
-    <div class="uc-panel active" id="tab-pm">
-      <div class="uc-main">
-        <div class="uc-persona">
-          <span class="persona-icon">📊</span>
-          <span class="persona-label">Product Manager</span>
-        </div>
-        <div class="uc-main-title">Write better PRDs, faster — without asking an engineer.</div>
-        <div class="uc-main-desc">Cortex gives you visibility into what your codebase already supports before you write a single requirement. No more "we already built this" moments in sprint planning.</div>
-        <div class="uc-flow">
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Context-aware PRD generation</strong> — Cortex pre-fills what it knows from the codebase before you answer a single question</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Smart feature intake</strong> — incoming requests are automatically checked against existing functionality before you review them</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Change impact assessment</strong> — know which user flows are affected before committing to a sprint</div>
-          </div>
-        </div>
-      </div>
-      <div class="uc-demo">
-        <div class="demo-label">Live example</div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">New feature request: "Add Apple Pay to checkout"</div>
-            <span class="demo-badge badge-green">Cortex knows this</span>
-          </div>
-          <div class="demo-card-body">
-            Brain analysis complete. Checkout flow identified in <code>src/payments/checkout.js</code>. Payment gateway abstraction layer already present — Apple Pay integration requires ~2 days. Existing test suite covers 14 payment scenarios.
-            <code>⚠ Risk: PaymentProcessor.init() in 3 dependent modules will need updates</code>
-          </div>
-        </div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">PRD generated with codebase context</div>
-            <span class="demo-badge badge-purple">Auto-generated</span>
-          </div>
-          <div class="demo-card-body">
-            PRD pre-filled with existing architecture details, API constraints, and affected modules. 6 business questions surfaced that need your input — everything else already answered from code.
-            <code>📄 Saved to Notion · 847 words · Est. 2 days engineering effort</code>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Engineering -->
-    <div class="uc-panel" id="tab-eng">
-      <div class="uc-main">
-        <div class="uc-persona">
-          <span class="persona-icon">⚙️</span>
-          <span class="persona-label">Engineering Lead</span>
-        </div>
-        <div class="uc-main-title">Know what breaks before you touch it.</div>
-        <div class="uc-main-desc">Cortex maps your full dependency graph and surfaces change risk signals before every sprint. Stop discovering breaking changes in production.</div>
-        <div class="uc-flow">
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Dependency mapping</strong> — full graph of what calls what, what imports what, what breaks if X changes</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Architectural decision log</strong> — every "why was this built this way?" question answered automatically from PR history</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Auto Brain rebuild on merge</strong> — GitHub PR trigger keeps the graph current without manual re-ingestion</div>
-          </div>
-        </div>
-      </div>
-      <div class="uc-demo">
-        <div class="demo-label">Live example</div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">Query: "What breaks if we refactor AuthService?"</div>
-            <span class="demo-badge badge-orange">High risk</span>
-          </div>
-          <div class="demo-card-body">
-            AuthService has 7 direct dependents and 12 transitive dependents. Highest risk: SessionManager, PaymentGateway.init(), and UserProfile sync.
-            <code>🔴 3 critical · 🟡 4 medium · ⚪ 5 low risk downstream modules</code>
-          </div>
-        </div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">Brain staleness alert</div>
-            <span class="demo-badge badge-orange">Stale</span>
-          </div>
-          <div class="demo-card-body">
-            Brain last built 4 days ago. 6 PRs merged since. Affected areas: checkout flow, auth middleware, notification service.
-            <code>→ Rebuild recommended before sprint planning</code>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Founder -->
-    <div class="uc-panel" id="tab-founder">
-      <div class="uc-main">
-        <div class="uc-persona">
-          <span class="persona-icon">🚀</span>
-          <span class="persona-label">Founder / Startup</span>
-        </div>
-        <div class="uc-main-title">Move fast without losing the plot.</div>
-        <div class="uc-main-desc">Early-stage teams move so fast that context evaporates. Cortex is the institutional memory your 8-person team can't afford to lose when your first senior hire joins.</div>
-        <div class="uc-flow">
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Instant codebase understanding</strong> — new hires (and VCs) can query the Brain to understand your product architecture in minutes</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>PRDs from a blank slate</strong> — start from scratch? Cortex queries the Brain and writes the first draft in 2 minutes</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Gap detection</strong> — Cortex surfaces what's undocumented, underbuilt, or technically risky before it becomes a crisis</div>
-          </div>
-        </div>
-      </div>
-      <div class="uc-demo">
-        <div class="demo-label">Live example</div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">Query: "Give me an overview of our product"</div>
-            <span class="demo-badge badge-green">Instant</span>
-          </div>
-          <div class="demo-card-body">
-            Your product is a B2B SaaS with 3 core modules: Auth, Billing, and Dashboard. 14 APIs. Primary data model is User → Org → Subscription. Checkout is your critical path.
-            <code>📊 47 entities · 12 decisions documented · 8 gaps identified</code>
-          </div>
-        </div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">Gap detected: No error handling on sync failure</div>
-            <span class="demo-badge badge-orange">Gap</span>
-          </div>
-          <div class="demo-card-body">
-            Cortex found that offline sync failure in the mobile client has no documented recovery path. No error handler in codebase. No PRD coverage.
-            <code>⚠ This is a silent failure risk in production</code>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- New hire -->
-    <div class="uc-panel" id="tab-new">
-      <div class="uc-main">
-        <div class="uc-persona">
-          <span class="persona-icon">👋</span>
-          <span class="persona-label">New Team Member</span>
-        </div>
-        <div class="uc-main-title">From day one, not week four.</div>
-        <div class="uc-main-desc">Stop asking senior engineers why things are the way they are. Cortex knows. Query the Brain like a senior colleague who's been here from the beginning.</div>
-        <div class="uc-flow">
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Architecture Q&amp;A</strong> — ask why any module exists, what it does, and how it connects to everything else</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Decision history</strong> — every architectural choice and its rationale, surfaced from PR descriptions and decision logs</div>
-          </div>
-          <div class="uc-flow-item">
-            <div class="flow-check"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#C8FF47" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-            <div class="flow-text"><strong>Safe change guidance</strong> — before touching any module, know what's at risk and what tests to run</div>
-          </div>
-        </div>
-      </div>
-      <div class="uc-demo">
-        <div class="demo-label">Live example</div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">Query: "Why is checkout split across two services?"</div>
-            <span class="demo-badge badge-purple">Decision found</span>
-          </div>
-          <div class="demo-card-body">
-            Architectural decision from PR #142 (Aug 2024): Checkout was split to enable independent scaling of the payment processing service under high load. Rationale documented by @raghav.
-            <code>Source: GitHub PR #142 · Notion Decision Log · 2024-08-14</code>
-          </div>
-        </div>
-        <div class="demo-card">
-          <div class="demo-card-head">
-            <div class="demo-card-title">Query: "Is it safe to modify the UserProfile module?"</div>
-            <span class="demo-badge badge-orange">Review first</span>
-          </div>
-          <div class="demo-card-body">
-            UserProfile has 5 dependents including AuthService and BillingSync. Medium risk. Last modified 3 weeks ago. 2 open edge cases in gaps log.
-            <code>→ Review SessionManager and BillingSync before making changes</code>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════════ BRAIN DIAGRAM ═══ -->
-<div id="brain-page">
-  <div class="brain-page-inner">
-    <p class="section-eyebrow reveal">The architecture</p>
-    <h2 class="section-title reveal">Everything flows through<br><span class="serif">one unified brain.</span></h2>
-
-    <div class="brain-full reveal">
-      <div class="brain-full-left">
-        <div>
-          <p style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px">Input sources</p>
-          <div class="brain-sources">
-            <div class="source-item"><span class="source-dot dot-lime"></span>GitHub — code + PRs</div>
-            <div class="source-item"><span class="source-dot dot-purple"></span>Notion — PRDs + decisions</div>
-            <div class="source-item"><span class="source-dot dot-orange"></span>Figma — design context</div>
-            <div class="source-item"><span class="source-dot dot-blue"></span>OKRs — strategic goals</div>
-            <div class="source-item"><span class="source-dot dot-gray"></span>Slack — thread context</div>
-          </div>
-        </div>
-        <div style="margin-top:32px">
-          <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Brain rebuild trigger</p>
-          <div style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg3);border:1px solid rgba(200,255,71,0.15);border-radius:10px">
-            <span class="source-dot dot-lime" style="animation:livePulse 2s infinite"></span>
-            <span style="font-size:13px;color:var(--muted2)">Auto-rebuilds on PR merge</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="brain-canvas-area">
-        <svg width="480" height="400" viewBox="0 0 480 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <!-- Outer orbit -->
-          <circle cx="240" cy="200" r="160" stroke="rgba(200,255,71,0.04)" stroke-width="1" stroke-dasharray="6 8"/>
-          <circle cx="240" cy="200" r="110" stroke="rgba(200,255,71,0.06)" stroke-width="1" stroke-dasharray="4 6"/>
-
-          <!-- Connection lines to orbit nodes -->
-          <line x1="240" y1="200" x2="240" y2="42" stroke="rgba(200,255,71,0.1)" stroke-width="1"/>
-          <line x1="240" y1="200" x2="392" y2="118" stroke="rgba(200,255,71,0.1)" stroke-width="1"/>
-          <line x1="240" y1="200" x2="392" y2="282" stroke="rgba(200,255,71,0.1)" stroke-width="1"/>
-          <line x1="240" y1="200" x2="240" y2="358" stroke="rgba(200,255,71,0.1)" stroke-width="1"/>
-          <line x1="240" y1="200" x2="88" y2="282" stroke="rgba(200,255,71,0.1)" stroke-width="1"/>
-          <line x1="240" y1="200" x2="88" y2="118" stroke="rgba(200,255,71,0.1)" stroke-width="1"/>
-
-          <!-- Orbit nodes — entities -->
-          <g transform="translate(240,42)">
-            <rect x="-32" y="-20" width="64" height="40" rx="8" fill="rgba(200,255,71,0.06)" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-            <text y="3" text-anchor="middle" fill="rgba(200,255,71,0.7)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">ENTITIES</text>
-          </g>
-          <g transform="translate(392,118)">
-            <rect x="-38" y="-20" width="76" height="40" rx="8" fill="rgba(123,110,246,0.06)" stroke="rgba(123,110,246,0.2)" stroke-width="1"/>
-            <text y="3" text-anchor="middle" fill="rgba(123,110,246,0.7)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">DECISIONS</text>
-          </g>
-          <g transform="translate(392,282)">
-            <rect x="-44" y="-20" width="88" height="40" rx="8" fill="rgba(255,92,58,0.06)" stroke="rgba(255,92,58,0.2)" stroke-width="1"/>
-            <text y="3" text-anchor="middle" fill="rgba(255,92,58,0.7)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">CHANGE RISK</text>
-          </g>
-          <g transform="translate(240,358)">
-            <rect x="-36" y="-20" width="72" height="40" rx="8" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-            <text y="3" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">GAPS</text>
-          </g>
-          <g transform="translate(88,282)">
-            <rect x="-42" y="-20" width="84" height="40" rx="8" fill="rgba(79,173,255,0.06)" stroke="rgba(79,173,255,0.2)" stroke-width="1"/>
-            <text y="3" text-anchor="middle" fill="rgba(79,173,255,0.7)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">DEPENDENCIES</text>
-          </g>
-          <g transform="translate(88,118)">
-            <rect x="-36" y="-20" width="72" height="40" rx="8" fill="rgba(200,255,71,0.04)" stroke="rgba(200,255,71,0.15)" stroke-width="1"/>
-            <text y="3" text-anchor="middle" fill="rgba(200,255,71,0.5)" font-size="9" font-family="'Clash Display',sans-serif" font-weight="600">USER FLOWS</text>
-          </g>
-
-          <!-- Center brain glow -->
-          <circle cx="240" cy="200" r="62" fill="rgba(200,255,71,0.03)" stroke="rgba(200,255,71,0.2)" stroke-width="1.5"/>
-          <circle cx="240" cy="200" r="46" fill="rgba(200,255,71,0.06)" stroke="rgba(200,255,71,0.35)" stroke-width="1"/>
-          <circle cx="240" cy="200" r="30" fill="rgba(200,255,71,0.1)" stroke="rgba(200,255,71,0.5)" stroke-width="1"/>
-          <text x="240" y="195" text-anchor="middle" fill="#C8FF47" font-size="13" font-family="'Clash Display',sans-serif" font-weight="700" letter-spacing="1">CORTEX</text>
-          <text x="240" y="212" text-anchor="middle" fill="rgba(200,255,71,0.5)" font-size="8" font-family="Inter,sans-serif">product brain</text>
-        </svg>
-
-        <div class="brain-outputs">
-          <div class="output-chip"><span class="output-arrow">→</span> PRD generator</div>
-          <div class="output-chip"><span class="output-arrow">→</span> Intake agent</div>
-          <div class="output-chip"><span class="output-arrow">→</span> Query interface</div>
-          <div class="output-chip"><span class="output-arrow">→</span> Risk alerts</div>
-          <div class="output-chip"><span class="output-arrow">→</span> Notion export</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════ CONTEXT SUPPLIER ═══ -->
-<div id="context-layer">
-  <div class="context-inner">
-    <p class="section-eyebrow reveal">The last step</p>
-    <h2 class="section-title reveal">The Brain doesn't just store context.<br><span class="serif">It supplies it — everywhere.</span></h2>
-    <p style="font-size:16px;color:var(--muted2);margin-top:20px;max-width:640px;line-height:1.75" class="reveal">
-      Once built, the Cortex Brain becomes the <strong style="color:var(--text);font-weight:500">live context layer</strong> for every tool your team already uses. Every downstream agent, integration, and workflow draws from the same unified knowledge graph — so context is never duplicated, never stale, never siloed.
-    </p>
-
-    <!-- Flow diagram: Sources → Brain → Tools -->
-    <div class="context-diagram">
-      <div class="ctx-flow reveal">
-        <!-- Input side -->
-        <div class="ctx-box">
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px">
-              <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>
-              <span style="font-size:12px;color:var(--muted2)">GitHub repo</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px">
-              <span style="width:6px;height:6px;border-radius:50%;background:var(--accent2);flex-shrink:0"></span>
-              <span style="font-size:12px;color:var(--muted2)">Notion docs + PRDs</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px">
-              <span style="width:6px;height:6px;border-radius:50%;background:var(--accent3);flex-shrink:0"></span>
-              <span style="font-size:12px;color:var(--muted2)">Pull request context</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:8px">
-              <span style="width:6px;height:6px;border-radius:50%;background:#4FADFF;flex-shrink:0"></span>
-              <span style="font-size:12px;color:var(--muted2)">Figma · OKRs · Slack</span>
-            </div>
-          </div>
-          <div class="ctx-box-title" style="margin-top:16px">Source layer</div>
-          <div class="ctx-box-sub">Raw artifacts ingested and normalised</div>
-        </div>
-
-        <!-- Arrow 1 -->
-        <div class="ctx-arrow">
-          <div class="ctx-arrow-line"></div>
-          <span class="ctx-arrow-label">synthesise</span>
-        </div>
-
-        <!-- Brain -->
-        <div class="ctx-box brain">
-          <div style="margin-bottom:16px">
-            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="32" cy="32" r="30" stroke="rgba(200,255,71,0.25)" stroke-width="1"/>
-              <circle cx="32" cy="32" r="20" fill="rgba(200,255,71,0.06)" stroke="rgba(200,255,71,0.4)" stroke-width="1.5"/>
-              <circle cx="32" cy="32" r="10" fill="rgba(200,255,71,0.12)" stroke="rgba(200,255,71,0.6)" stroke-width="1"/>
-              <text x="32" y="36" text-anchor="middle" fill="#C8FF47" font-size="8" font-family="'Clash Display',sans-serif" font-weight="700">C</text>
-              <circle cx="32" cy="4" r="3" fill="rgba(200,255,71,0.3)"/>
-              <circle cx="58" cy="18" r="3" fill="rgba(200,255,71,0.3)"/>
-              <circle cx="58" cy="46" r="3" fill="rgba(200,255,71,0.3)"/>
-              <circle cx="32" cy="60" r="3" fill="rgba(200,255,71,0.3)"/>
-              <circle cx="6" cy="46" r="3" fill="rgba(200,255,71,0.3)"/>
-              <circle cx="6" cy="18" r="3" fill="rgba(200,255,71,0.3)"/>
-              <line x1="32" y1="12" x2="32" y2="22" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <line x1="54" y1="20" x2="46" y2="26" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <line x1="54" y1="44" x2="46" y2="38" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <line x1="32" y1="52" x2="32" y2="42" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <line x1="10" y1="44" x2="18" y2="38" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-              <line x1="10" y1="20" x2="18" y2="26" stroke="rgba(200,255,71,0.2)" stroke-width="1"/>
-            </svg>
-          </div>
-          <div class="ctx-box-title" style="color:var(--accent);font-size:18px">Cortex Brain</div>
-          <div class="ctx-box-sub" style="margin-top:6px">Structured knowledge graph.<br>Entities · Decisions · Risks · Gaps</div>
-          <div style="margin-top:14px;display:flex;justify-content:center;gap:6px;flex-wrap:wrap">
-            <span style="font-size:10px;padding:3px 9px;border-radius:4px;background:rgba(200,255,71,0.08);border:1px solid rgba(200,255,71,0.15);color:var(--accent)">Always current</span>
-            <span style="font-size:10px;padding:3px 9px;border-radius:4px;background:rgba(200,255,71,0.08);border:1px solid rgba(200,255,71,0.15);color:var(--accent)">Single source of truth</span>
-          </div>
-        </div>
-
-        <!-- Arrow 2 -->
-        <div class="ctx-arrow">
-          <div class="ctx-arrow-line"></div>
-          <span class="ctx-arrow-label">supply context</span>
-        </div>
-
-        <!-- Output side -->
-        <div class="ctx-box">
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(200,255,71,0.04);border:1px solid rgba(200,255,71,0.12);border-radius:8px">
-              <span style="font-size:13px">📄</span>
-              <span style="font-size:12px;color:var(--muted2)">PRD Generator agent</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(123,110,246,0.04);border:1px solid rgba(123,110,246,0.12);border-radius:8px">
-              <span style="font-size:13px">🎯</span>
-              <span style="font-size:12px;color:var(--muted2)">Intake triage agent</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(255,92,58,0.04);border:1px solid rgba(255,92,58,0.12);border-radius:8px">
-              <span style="font-size:13px">💬</span>
-              <span style="font-size:12px;color:var(--muted2)">Slack assistant</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(79,173,255,0.04);border:1px solid rgba(79,173,255,0.12);border-radius:8px">
-              <span style="font-size:13px">⚙️</span>
-              <span style="font-size:12px;color:var(--muted2)">IDE + CI/CD plugins</span>
-            </div>
-          </div>
-          <div class="ctx-box-title" style="margin-top:16px">Consumer layer</div>
-          <div class="ctx-box-sub">Every tool draws from one Brain</div>
-        </div>
-      </div>
-
-      <p class="ctx-center-label reveal">
-        The Brain is the <strong>permanent context layer.</strong><br>
-        Every agent, every tool, every teammate — same knowledge, zero repetition.
-      </p>
-
-      <!-- Tool cards -->
-      <div class="ctx-tools-grid reveal">
-
-        <div class="ctx-tool lime">
-          <div class="ctx-tool-header">
-            <div class="ctx-tool-icon" style="background:rgba(200,255,71,0.08);border:1px solid rgba(200,255,71,0.15)">📄</div>
-            <div class="ctx-tool-name">PRD Generator</div>
-          </div>
-          <div class="ctx-tool-desc">Brain pre-fills architecture context, affected modules, tech constraints, and risk signals. You answer only the business questions.</div>
-          <div class="ctx-tool-examples">
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent)"></span>What already exists in code</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent)"></span>Which modules are affected</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent)"></span>Estimated engineering effort</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent)"></span>Change risk assessment</div>
-          </div>
-        </div>
-
-        <div class="ctx-tool purple">
-          <div class="ctx-tool-header">
-            <div class="ctx-tool-icon" style="background:rgba(123,110,246,0.08);border:1px solid rgba(123,110,246,0.15)">🎯</div>
-            <div class="ctx-tool-name">Intake Agent</div>
-          </div>
-          <div class="ctx-tool-desc">Every incoming feature request is cross-checked against the Brain before it reaches your backlog. Duplicates flagged. Impact pre-assessed.</div>
-          <div class="ctx-tool-examples">
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent2)"></span>Duplicate detection</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent2)"></span>Codebase feasibility check</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent2)"></span>Missing info surfaced upfront</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent2)"></span>Auto-routed to right team</div>
-          </div>
-        </div>
-
-        <div class="ctx-tool orange">
-          <div class="ctx-tool-header">
-            <div class="ctx-tool-icon" style="background:rgba(255,92,58,0.08);border:1px solid rgba(255,92,58,0.15)">💬</div>
-            <div class="ctx-tool-name">Slack Assistant</div>
-          </div>
-          <div class="ctx-tool-desc">Ask about your product directly in Slack. Cortex answers from the Brain — no digging through docs, no pinging engineers for context.</div>
-          <div class="ctx-tool-examples">
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent3)"></span>"What does AuthService do?"</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent3)"></span>"Why was offline mode added?"</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent3)"></span>"What breaks if we change X?"</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:var(--accent3)"></span>Sprint risk digest on Monday</div>
-          </div>
-        </div>
-
-        <div class="ctx-tool blue">
-          <div class="ctx-tool-header">
-            <div class="ctx-tool-icon" style="background:rgba(79,173,255,0.08);border:1px solid rgba(79,173,255,0.15)">⚙️</div>
-            <div class="ctx-tool-name">IDE + CI/CD</div>
-          </div>
-          <div class="ctx-tool-desc">Engineers get Brain context inline while coding. CI/CD pipelines query the Brain at deploy time to flag risk before code ships to production.</div>
-          <div class="ctx-tool-examples">
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:#4FADFF"></span>Inline dependency warnings in VS Code</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:#4FADFF"></span>Pre-deploy risk gate in CI</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:#4FADFF"></span>PR description auto-enriched</div>
-            <div class="ctx-example"><span class="ctx-example-dot" style="background:#4FADFF"></span>Test coverage gap alerts</div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- API strip -->
-      <div class="ctx-api-strip reveal">
-        <div class="ctx-api-inner">
-          <div class="ctx-api-left">
-            <span class="ctx-api-badge">Open API</span>
-            <div class="ctx-api-text">
-              <strong>Build your own context consumer.</strong> Any tool, any workflow, any agent can query the Cortex Brain via REST API — just pass a question, get structured context back.
-            </div>
-          </div>
-          <div class="ctx-code">
-            <span style="color:var(--muted)">POST</span> /brain/query &nbsp;·&nbsp; <span>{ "question": "What modules handle payments?" }</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════ FEATURES ═══ -->
-<div id="features">
-  <div class="features-inner">
-    <div class="features-header">
-      <div>
-        <p class="section-eyebrow reveal">Features</p>
-        <h2 class="section-title reveal">Everything you need to<br><span class="serif">run product better.</span></h2>
-      </div>
-    </div>
-
-    <div class="features-grid reveal">
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-lime">⚡</div>
-        <div class="feat-body">
-          <div class="feat-title">Instant codebase memory</div>
-          <div class="feat-desc">Point Cortex at any repo. It maps every module, API endpoint, data model, and inter-service dependency into structured memory in minutes — not hours.</div>
-          <span class="feat-tag badge-green">Core</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-lime">📄</div>
-        <div class="feat-body">
-          <div class="feat-title">Context-aware PRD generation</div>
-          <div class="feat-desc">Generate PRDs that already know what your codebase supports. Cortex pre-fills architecture details, constraints, and risks — you answer only the business questions.</div>
-          <span class="feat-tag badge-green">Core</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-purple">🎯</div>
-        <div class="feat-body">
-          <div class="feat-title">Smart feature intake</div>
-          <div class="feat-desc">Every incoming request is automatically triaged against the Brain — surfacing what Cortex already knows, what's missing, and what needs a business decision from you.</div>
-          <span class="feat-tag badge-purple">Automation</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-orange">⚠️</div>
-        <div class="feat-body">
-          <div class="feat-title">Change risk mapping</div>
-          <div class="feat-desc">Before every sprint, know which modules are high-risk to modify, what breaks downstream, and which edge cases aren't covered. Stop discovering risks in production.</div>
-          <span class="feat-tag badge-orange">Safety</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-lime">🔗</div>
-        <div class="feat-body">
-          <div class="feat-title">Multi-source synthesis</div>
-          <div class="feat-desc">Merges code, Notion docs, GitHub PR descriptions, and OKRs into one unified knowledge graph. Conflicts resolved by source priority. One version of truth.</div>
-          <span class="feat-tag badge-green">Core</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-purple">🔄</div>
-        <div class="feat-body">
-          <div class="feat-title">Auto-rebuild on merge</div>
-          <div class="feat-desc">GitHub PR webhook triggers Brain rebuild automatically on every merge. Staleness score tracks drift. Query responses always cite recency so you know when to re-ingest.</div>
-          <span class="feat-tag badge-purple">Automation</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-orange">🔒</div>
-        <div class="feat-body">
-          <div class="feat-title">Self-hosted deployment</div>
-          <div class="feat-desc">Run Cortex entirely on your own infrastructure. Your source code never leaves your boundary. Brain stores synthesised metadata, not raw code. SOC2-ready architecture.</div>
-          <span class="feat-tag badge-orange">Security</span>
-        </div>
-      </div>
-      <div class="feat">
-        <div class="feat-icon-wrap feat-icon-lime">📊</div>
-        <div class="feat-body">
-          <div class="feat-title">Gap detection</div>
-          <div class="feat-desc">Cortex surfaces undocumented behaviours, missing error handlers, implicit architectural assumptions, and unresolved open questions — before they become incidents.</div>
-          <span class="feat-tag badge-green">Intelligence</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════ SECURITY ═══ -->
-<section id="security" class="page-section" style="border-top:1px solid var(--border)">
-  <p class="section-eyebrow reveal">Security</p>
-  <h2 class="section-title reveal">Built for teams that care<br><span class="serif">about where code goes.</span></h2>
-  <p style="font-size:15px;color:var(--muted2);margin-top:20px;max-width:600px;line-height:1.7" class="reveal">
-    The Brain stores synthesised metadata — not raw source code. By the time ingestion completes, your code is gone. What persists is structured knowledge: entities, decisions, risks.
+  <p class="hero-sub">
+    Cortex builds a living knowledge graph of your entire org — and plugs it into every AI tool your team already uses. Context that compounds. Memory that never leaves.
   </p>
 
-  <div class="security-grid reveal">
-    <div class="sec-tier">
-      <span class="sec-badge badge-green">Tier 1</span>
-      <div class="sec-tier-name">Cloud</div>
-      <div class="sec-target">Startups · Solo founders · Low-sensitivity projects</div>
-      <div class="sec-items">
-        <div class="sec-item"><span class="sec-check">✓</span> Cortex-hosted infrastructure</div>
-        <div class="sec-item"><span class="sec-check">✓</span> No raw code stored</div>
-        <div class="sec-item"><span class="sec-check">✓</span> API no-training opt-out</div>
-        <div class="sec-item"><span class="sec-check">✓</span> .cortexignore file exclusions</div>
-        <div class="sec-item"><span class="sec-x">–</span> Code stays on your infra</div>
-        <div class="sec-item"><span class="sec-x">–</span> Air-gapped AI inference</div>
-      </div>
+  <div class="hero-actions">
+    <a href="#waitlist" class="btn-primary">Request pre-access →</a>
+    <a href="#how" class="btn-secondary">See how it works</a>
+  </div>
+
+  <div class="pipeline">
+    <span class="pipe-node">GitHub</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-node">Notion</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-node">Figma</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-node brain">⬡ Cortex Brain</span>
+    <span class="pipe-arrow">→</span>
+    <span class="pipe-node">Any AI tool</span>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">The problem</span>
+      <h2 class="section-title">Context loss is the<br/>hidden tax on every team.</h2>
+      <p class="section-body">Every org builds years of knowledge — in decisions, docs, code, and conversations. But every AI session starts from zero. Every time.</p>
     </div>
-    <div class="sec-tier featured">
-      <span class="sec-badge" style="background:rgba(200,255,71,0.1);color:var(--accent);border:1px solid rgba(200,255,71,0.2)">Tier 2 · Recommended</span>
-      <div class="sec-tier-name">Self-hosted</div>
-      <div class="sec-target">Mid-market SaaS · Growth-stage · Cautious buyers</div>
-      <div class="sec-items">
-        <div class="sec-item"><span class="sec-check">✓</span> Runs on your infrastructure</div>
-        <div class="sec-item"><span class="sec-check">✓</span> No raw code stored</div>
-        <div class="sec-item"><span class="sec-check">✓</span> API no-training opt-out</div>
-        <div class="sec-item"><span class="sec-check">✓</span> .cortexignore file exclusions</div>
-        <div class="sec-item"><span class="sec-check">✓</span> Code never leaves your boundary</div>
-        <div class="sec-item"><span class="sec-x">–</span> Air-gapped AI inference</div>
+
+    <div class="problem-grid">
+      <div class="problem-cards fade-in">
+        <div class="problem-card">
+          <span class="problem-icon">🧠</span>
+          <div>
+            <h4>Knowledge lives in people's heads</h4>
+            <p>Decisions, tradeoffs, architectural reasoning — locked inside team members. One departure and it's gone forever.</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <span class="problem-icon">🔄</span>
+          <div>
+            <h4>Every AI session starts blind</h4>
+            <p>Your PM re-explains context to draft a spec. Your engineer re-explains the codebase. Your AI tools have no idea who you are.</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <span class="problem-icon">💸</span>
+          <div>
+            <h4>Raw context is expensive and lossy</h4>
+            <p>Dumping entire docs and files into prompts is costly, slow, and still misses the why behind every decision.</p>
+          </div>
+        </div>
+        <div class="problem-card">
+          <span class="problem-icon">📈</span>
+          <div>
+            <h4>It gets worse as you scale</h4>
+            <p>The more your org builds, the bigger the knowledge gap. More tools, more silos, more context that goes nowhere.</p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="sec-tier">
-      <span class="sec-badge badge-orange">Tier 3</span>
-      <div class="sec-tier-name">Air-gapped</div>
-      <div class="sec-target">Fintech · Healthcare · Enterprise · Regulated industries</div>
-      <div class="sec-items">
-        <div class="sec-item"><span class="sec-check">✓</span> Runs on your infrastructure</div>
-        <div class="sec-item"><span class="sec-check">✓</span> No raw code stored</div>
-        <div class="sec-item"><span class="sec-check">✓</span> Zero external API calls</div>
-        <div class="sec-item"><span class="sec-check">✓</span> .cortexignore file exclusions</div>
-        <div class="sec-item"><span class="sec-check">✓</span> Code never leaves your boundary</div>
-        <div class="sec-item"><span class="sec-check">✓</span> Local LLM inference (Ollama)</div>
+
+      <div class="problem-statement fade-in">
+        <div class="problem-quote">
+          <p>This isn't a model quality problem. The models are exceptional.<br/><br/>It's a <strong>context infrastructure problem</strong>. And nobody's solving it at the layer it actually needs to be solved.</p>
+        </div>
+        <div style="margin-top: 24px; padding: 24px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;">
+          <div style="font-family: var(--font-mono); font-size: 11px; color: var(--text-3); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px;">The tax, in practice</div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--em); background: var(--em-dim); padding: 3px 8px; border-radius: 4px;">PM</span>
+              <span style="font-size: 13px; color: var(--text-2);">Re-explaining context to draft a spec</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--em); background: var(--em-dim); padding: 3px 8px; border-radius: 4px;">ENG</span>
+              <span style="font-size: 13px; color: var(--text-2);">Week one asking questions no one can answer</span>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <span style="font-family: var(--font-mono); font-size: 11px; color: var(--em); background: var(--em-dim); padding: 3px 8px; border-radius: 4px;">LEAD</span>
+              <span style="font-size: 13px; color: var(--text-2);">Chasing status on a Slack thread</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════════════════════════════ CTA ═══ -->
-<div id="cta-section">
-  <div class="cta-inner">
-    <h2 class="cta-title reveal">
-      Give your<br>product a<br><span class="serif">brain.</span>
-    </h2>
-    <p class="cta-sub reveal">Join 400+ PMs and engineers on the waitlist. Early access invite only. No credit card required.</p>
-
-    <form class="waitlist-form reveal" id="cta-form" onsubmit="submitWaitlist(event)">
-      <input type="email" id="waitlist-email" placeholder="your@company.com" required>
-      <button type="submit">Get early access →</button>
-    </form>
-    <div class="success-state" id="waitlist-success">
-      <p>You're on the list. We'll reach out with early access soon.</p>
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">How it works</span>
+      <h2 class="section-title">Ingest. Synthesise. Supply.</h2>
+      <p class="section-body">Three steps. Zero maintenance. Context that flows into everything your team already uses.</p>
     </div>
-    <p class="waitlist-note reveal">No spam. Invite-only access. Unsubscribe anytime.</p>
-  </div>
-</div>
 
-<!-- ═══════════════════════════════════ FOOTER ═══ -->
+    <div class="how-steps fade-in">
+      <div class="how-step">
+        <span class="step-num">01 — INGEST</span>
+        <div class="step-icon-row">
+          <span class="step-tag active">GitHub</span>
+          <span class="step-tag active">Notion</span>
+          <span class="step-tag active">Figma</span>
+          <span class="step-tag">+ more</span>
+        </div>
+        <h3>Connect your sources</h3>
+        <p>Link your repos, docs, and design files. Cortex ingests everything — code, PRs, decisions, SOPs, design context — and normalises it into a unified format.</p>
+      </div>
+      <div class="how-step">
+        <span class="step-num">02 — SYNTHESISE</span>
+        <div class="step-icon-row">
+          <span class="step-tag active">entities</span>
+          <span class="step-tag active">decisions</span>
+          <span class="step-tag active">edges</span>
+          <span class="step-tag active">why</span>
+        </div>
+        <h3>Build the Brain</h3>
+        <p>AI synthesises raw artifacts into a living knowledge graph. Every feature, decision, and tradeoff becomes a node. Every relationship — why it exists, what it connects to — becomes an edge.</p>
+      </div>
+      <div class="how-step">
+        <span class="step-num">03 — SUPPLY</span>
+        <div class="step-icon-row">
+          <span class="step-tag active">MCP</span>
+          <span class="step-tag active">REST API</span>
+          <span class="step-tag">any tool</span>
+        </div>
+        <h3>Context everywhere</h3>
+        <p>The Brain plugs into any AI tool via MCP or API. Pre-synthesised, org-specific context flows directly into whatever your team is using — no new workflows, no switching tools.</p>
+      </div>
+    </div>
+
+    <div class="brain-visual fade-in">
+      <div class="bv-col">
+        <div class="bv-node">src/payments/checkout.js</div>
+        <div class="bv-node">PRD: Offline Mode v2</div>
+        <div class="bv-node">PR #142: Auth refactor</div>
+        <div class="bv-node">Notion: Q3 decisions</div>
+      </div>
+      <div class="bv-arrow">→</div>
+      <div class="bv-center">
+        <div class="bv-brain">⬡ Brain</div>
+        <div class="bv-label">KNOWLEDGE GRAPH</div>
+      </div>
+      <div class="bv-arrow">→</div>
+      <div class="bv-col">
+        <div class="bv-output">query_brain()</div>
+        <div class="bv-output">get_context()</div>
+        <div class="bv-output">list_decisions()</div>
+        <div class="bv-output">get_brain_stats()</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="usecases" id="usecases">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">Use cases</span>
+      <h2 class="section-title">Built for everyone<br/>in your org.</h2>
+      <p class="section-body">Not just for engineers. Cortex gives every role the context they need — in the AI tools they already use.</p>
+    </div>
+
+    <div class="usecase-tabs fade-in">
+      <button class="tab-btn active" onclick="switchTab('pm')">Product Manager</button>
+      <button class="tab-btn" onclick="switchTab('eng')">Engineer</button>
+      <button class="tab-btn" onclick="switchTab('lead')">Leadership</button>
+    </div>
+
+    <div class="usecase-panels">
+      <!-- PM -->
+      <div class="usecase-panel active" id="panel-pm">
+        <div class="uc-info">
+          <h3>Stop speccing in the dark.</h3>
+          <p>Your AI tools don't know what your team has already built, decided, or shipped. Cortex changes that — so every spec, every feature decision, every intake review is grounded in reality.</p>
+          <ul class="uc-list">
+            <li>Ask "what did we decide about offline mode?" and get the actual answer — with source</li>
+            <li>Generate specs pre-filled with existing architecture and constraints</li>
+            <li>Instantly know if a feature request was already built, rejected, or in progress</li>
+            <li>Understand the why behind every product decision — not just what exists</li>
+          </ul>
+        </div>
+        <div class="uc-demo">
+          <div class="uc-demo-header">
+            <div class="demo-dot"></div>
+            <span class="demo-title">Brain query · PM</span>
+          </div>
+          <div class="demo-query">→ "Why was the checkout flow split into two steps?"</div>
+          <div class="demo-response">
+            Decision found in <span>PR #89 (Mar 2024)</span><br/>
+            Checkout was split to reduce drop-off at payment entry. A/B test (n=4,200) showed <span>23% lift</span> in completion rate with the two-step flow.<br/><br/>
+            <span>Source: Notion PRD v3 · GitHub PR #89 · Mar 2024</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ENG -->
+      <div class="usecase-panel" id="panel-eng">
+        <div class="uc-info">
+          <h3>Accurate answers about your codebase.</h3>
+          <p>Generic AI answers aren't enough when you're working in a complex, evolving system. Cortex gives your AI tools the org-specific context to answer questions about your actual implementation — not just patterns.</p>
+          <ul class="uc-list">
+            <li>Ask how any module works and get answers specific to your codebase</li>
+            <li>Understand what breaks before you touch anything</li>
+            <li>Onboard in days instead of weeks — Brain knows your architecture</li>
+            <li>Trace every decision back to the PR or doc that created it</li>
+          </ul>
+        </div>
+        <div class="uc-demo">
+          <div class="uc-demo-header">
+            <div class="demo-dot"></div>
+            <span class="demo-title">Brain query · Engineer</span>
+          </div>
+          <div class="demo-query">→ "What happens if I modify the AuthService?"</div>
+          <div class="demo-response">
+            <span>⚠ High risk.</span> AuthService has 6 direct dependents:<br/>
+            SessionManager, PaymentGateway.init(), UserProfile sync, NotificationService, BillingSync, AdminMiddleware.<br/><br/>
+            Last modified <span>3 weeks ago</span>. 2 unresolved edge cases in gap log.<br/>
+            <span>Recommend reviewing SessionManager before touching init().</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- LEAD -->
+      <div class="usecase-panel" id="panel-lead">
+        <div class="uc-info">
+          <h3>Real-time status. No Slack threads.</h3>
+          <p>Leadership context shouldn't require a meeting. Cortex gives anyone in leadership instant, accurate answers about product status, decisions made, and what's at risk — whenever they need it.</p>
+          <ul class="uc-list">
+            <li>Ask "where are we with payments v2?" and get a real answer</li>
+            <li>Understand decision history without reading through PRDs</li>
+            <li>See what's in progress, what's blocked, what's shipped</li>
+            <li>Get risk signals before they become incidents</li>
+          </ul>
+        </div>
+        <div class="uc-demo">
+          <div class="uc-demo-header">
+            <div class="demo-dot"></div>
+            <span class="demo-title">Brain query · Leadership</span>
+          </div>
+          <div class="demo-query">→ "What's the current state of the payments module?"</div>
+          <div class="demo-response">
+            Payments module has <span>3 active components</span>: Checkout, PaymentGateway, Reconciliation.<br/><br/>
+            Checkout: <span>stable</span>, last updated 2 weeks ago.<br/>
+            PaymentGateway: <span>active development</span>, 4 open PRs.<br/>
+            Reconciliation: <span>⚠ 1 unresolved gap</span> — offline sync failure has no documented recovery path.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATIONS -->
+<section class="integrations" id="integrations">
+  <div class="container">
+    <div class="int-grid fade-in">
+      <div>
+        <span class="section-label">Integrations</span>
+        <h2 class="section-title">Plugs into your stack.<br/>No new tools.</h2>
+        <p class="section-body" style="margin-bottom: 32px;">The Brain connects to any AI tool via MCP or REST API. Cursor, Claude, Copilot, Notion AI — org-specific context flows in automatically. Your team keeps using what they already use.</p>
+
+        <div class="api-block">
+          <div class="api-block-header">MCP · REST API</div>
+          <div class="api-line"><span class="api-method">POST</span> <span class="api-path">/brain/query</span></div>
+          <div class="api-line"><span class="api-key">"question"</span>: <span class="api-val">"Why was auth split from payments?"</span></div>
+          <div class="api-line" style="margin-top: 8px; color: var(--text-3);">→ Returns structured context, sources, confidence</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="int-tools">
+          <div class="int-tool">
+            <div class="int-tool-icon">⚡</div>
+            Cursor
+          </div>
+          <div class="int-tool">
+            <div class="int-tool-icon">◆</div>
+            Claude
+          </div>
+          <div class="int-tool">
+            <div class="int-tool-icon">🤖</div>
+            Copilot
+          </div>
+          <div class="int-tool">
+            <div class="int-tool-icon">📝</div>
+            Notion AI
+          </div>
+          <div class="int-tool">
+            <div class="int-tool-icon">🔧</div>
+            Any IDE
+          </div>
+          <div class="int-tool">
+            <div class="int-tool-icon">⚙️</div>
+            Custom
+          </div>
+          <div class="int-center" style="grid-column: span 3;">
+            ⬡ Cortex Brain · MCP + REST API · Any AI tool
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MOAT -->
+<section class="moat" id="moat">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">Why Cortex</span>
+      <h2 class="section-title">Context that compounds.<br/>Memory that sticks.</h2>
+      <p class="section-body">The Brain isn't static. Every commit, every doc update, every iteration makes it richer — automatically.</p>
+    </div>
+
+    <div class="moat-grid fade-in">
+      <div class="moat-card">
+        <span class="moat-icon">🧬</span>
+        <h3>Stores the why</h3>
+        <p>Most tools store what was built. Cortex stores why. Every decision traces back to the PRD, PR, or doc that created it — queryable by anyone, any time.</p>
+      </div>
+      <div class="moat-card">
+        <span class="moat-icon">📈</span>
+        <h3>Compounds over time</h3>
+        <p>Every commit, every update, every new doc makes the Brain smarter. The longer Cortex runs, the more valuable it gets — and the less your team has to explain.</p>
+      </div>
+      <div class="moat-card">
+        <span class="moat-icon">⚡</span>
+        <h3>Radical token efficiency</h3>
+        <p>Pre-synthesised graph nodes replace raw file dumps — a fraction of the size, with far more signal. Lower AI costs. Sharper responses. At scale, both compound significantly.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA / WAITLIST -->
+<section class="cta-section" id="waitlist">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <div class="fade-in">
+      <h2>Give your org a Brain.</h2>
+      <p>Pre-access is open. First cohort is small and intentional.</p>
+    </div>
+
+    <div class="waitlist-form fade-in" id="waitlist-form-wrapper">
+      <form id="waitlist-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First name</label>
+            <input type="text" placeholder="Uttam" required/>
+          </div>
+          <div class="form-group">
+            <label>Last name</label>
+            <input type="text" placeholder="Bansal" required/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Work email</label>
+          <input type="email" placeholder="you@company.com" required/>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Company</label>
+            <input type="text" placeholder="Acme Inc." required/>
+          </div>
+          <div class="form-group">
+            <label>Team size</label>
+            <select required>
+              <option value="" disabled selected>Select</option>
+              <option>1–10</option>
+              <option>10–50</option>
+              <option>50–150</option>
+              <option>150+</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Your role</label>
+          <select required>
+            <option value="" disabled selected>Select your role</option>
+            <option>Product Manager</option>
+            <option>Engineering Lead / Manager</option>
+            <option>Founder / CEO</option>
+            <option>Software Engineer</option>
+            <option>Designer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Where does context loss hurt your team most? <span style="color: var(--text-3)">(optional)</span></label>
+          <textarea placeholder="e.g. New engineers take weeks to onboard, specs get written without codebase context..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Request pre-access →</button>
+        <p class="form-note">No spam. Invite-only access. No credit card required.</p>
+      </form>
+
+      <div class="form-success" id="form-success">
+        <div class="success-icon">✓</div>
+        <h3>You're on the list.</h3>
+        <p>We'll reach out with pre-access details soon.<br/>First cohort is intentionally small — we'll be in touch personally.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
   <div class="footer-left">
-    <a href="#" class="nav-logo">
-      <div class="nav-logo-mark">C</div>
-      <span class="nav-logo-text">Cortex</span>
-    </a>
-    <div class="footer-links">
-      <a href="#what">Product</a>
-      <a href="#how">How it works</a>
-      <a href="#security">Security</a>
-      <a href="#">Privacy</a>
-      <a href="#">Contact</a>
-    </div>
+    <div class="logo-mark" style="width:28px;height:28px;font-size:14px;">C</div>
+    <span class="footer-text">© 2025 Cortex. All rights reserved.</span>
   </div>
-  <p style="font-size:12px;color:var(--muted)">© 2025 Cortex. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Contact</a>
+  </div>
 </footer>
 
-<!-- ═══════════════════════════════════ SCRIPTS ═══ -->
 <script>
-// ── Neural canvas animation ──────────────────────────────────────
-const canvas = document.getElementById('neural-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, nodes = [], animId;
-
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-
-function initNodes() {
-  nodes = [];
-  const count = Math.floor((W * H) / 18000);
-  for (let i = 0; i < count; i++) {
-    nodes.push({
-      x: Math.random() * W,
-      y: Math.random() * H,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      r: Math.random() * 2 + 1,
-      pulse: Math.random() * Math.PI * 2,
-      pulseSpeed: 0.02 + Math.random() * 0.02
-    });
+  // Tab switching
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.usecase-panel').forEach(p => p.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById('panel-' + tab).classList.add('active');
   }
-}
 
-function draw() {
-  ctx.clearRect(0, 0, W, H);
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('waitlist-form').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
 
-  // Draw connections
-  for (let i = 0; i < nodes.length; i++) {
-    for (let j = i + 1; j < nodes.length; j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const maxDist = 140;
-      if (dist < maxDist) {
-        const alpha = (1 - dist / maxDist) * 0.12;
-        ctx.beginPath();
-        ctx.moveTo(nodes[i].x, nodes[i].y);
-        ctx.lineTo(nodes[j].x, nodes[j].y);
-        ctx.strokeStyle = `rgba(200,255,71,${alpha})`;
-        ctx.lineWidth = 0.5;
-        ctx.stroke();
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
       }
-    }
-  }
+    });
+  }, { threshold: 0.1 });
 
-  // Draw nodes
-  nodes.forEach(n => {
-    n.pulse += n.pulseSpeed;
-    const alpha = 0.3 + Math.sin(n.pulse) * 0.2;
-    ctx.beginPath();
-    ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(200,255,71,${alpha})`;
-    ctx.fill();
-
-    // Move
-    n.x += n.vx;
-    n.y += n.vy;
-    if (n.x < 0 || n.x > W) n.vx *= -1;
-    if (n.y < 0 || n.y > H) n.vy *= -1;
-  });
-
-  animId = requestAnimationFrame(draw);
-}
-
-resize();
-initNodes();
-draw();
-window.addEventListener('resize', () => { resize(); initNodes(); });
-
-// ── Nav scroll state ─────────────────────────────────────────────
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-});
-
-// ── Scroll reveal ────────────────────────────────────────────────
-const reveals = document.querySelectorAll('.reveal');
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.08 });
-reveals.forEach(el => revealObserver.observe(el));
-
-// ── Use case tabs ────────────────────────────────────────────────
-function switchTab(id) {
-  document.querySelectorAll('.uc-tab').forEach((t, i) => {
-    const ids = ['pm', 'eng', 'founder', 'new'];
-    t.classList.toggle('active', ids[i] === id);
-  });
-  document.querySelectorAll('.uc-panel').forEach(p => {
-    p.classList.toggle('active', p.id === 'tab-' + id);
-  });
-}
-
-// ── Waitlist form ────────────────────────────────────────────────
-async function submitWaitlist(e) {
-  e.preventDefault();
-  const email = document.getElementById('waitlist-email').value;
-  await fetch('https://formspree.io/f/mqegezrk', {
-    method: 'POST',
-    headers: { 'Accept': 'application/json' },
-    body: JSON.stringify({ email })
-  });
-  document.getElementById('cta-form').style.display = 'none';
-  document.getElementById('waitlist-success').style.display = 'block';
-}
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 </script>
 </body>
 </html>
