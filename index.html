@@ -76,7 +76,7 @@
 
   .logo-text { font-family: var(--font-head); font-weight: 600; font-size: 17px; color: var(--text); letter-spacing: -0.3px; }
 
-  .nav-links { display: flex; align-items: center; gap: 24px; list-style: none; }
+  .nav-links { display: flex; align-items: center; gap: 20px; list-style: none; }
 
   .nav-links a { color: var(--text-2); text-decoration: none; font-size: 14px; font-weight: 400; transition: color 0.2s; }
   .nav-links a:hover { color: var(--text); }
@@ -183,31 +183,44 @@
   }
   .btn-secondary:hover { color: var(--text); border-color: rgba(255,255,255,0.15); background: var(--bg3); }
 
-  /* PIPELINE */
-  .pipeline {
-    display: flex; align-items: center; justify-content: center;
-    margin-top: 72px; flex-wrap: wrap; gap: 4px;
+  /* PIPELINE DIAGRAM */
+  .pipeline-diagram {
+    margin-top: 72px;
     animation: fadeUp 0.6s 0.5s ease both;
+    display: flex; align-items: center; justify-content: center;
   }
-
+  .pipeline-sources { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
   .pipe-node {
-    background: var(--bg3); border: 1px solid var(--border); border-radius: 10px;
-    padding: 10px 16px; font-family: var(--font-mono); font-size: 12px; color: var(--text-2); white-space: nowrap;
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 16px; font-family: var(--font-mono); font-size: 11px; color: var(--text-2); white-space: nowrap;
   }
-  .pipe-node.brain { background: var(--em-dim); border-color: var(--border-em); color: var(--em); font-weight: 500; }
-  .pipe-arrow { color: var(--text-3); font-size: 14px; padding: 0 4px; }
+  .pipeline-converge { width: 64px; height: 150px; position: relative; flex-shrink: 0; }
+  .pipeline-converge svg { width: 100%; height: 100%; overflow: visible; }
+  .pipe-brain {
+    background: var(--em-dim); border: 2px solid var(--em); border-radius: 50%;
+    width: 90px; height: 90px; flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: var(--font-head); font-weight: 800; font-size: 12px; color: var(--em);
+    box-shadow: 0 0 32px rgba(16,185,129,0.2); animation: breathe 3s ease-in-out infinite; position: relative; z-index: 2;
+  }
+  .pipe-brain-sub { font-family: var(--font-mono); font-size: 8px; color: var(--em); opacity: 0.6; letter-spacing: 0.5px; margin-top: 2px; }
+  .pipeline-diverge { width: 64px; height: 150px; position: relative; flex-shrink: 0; }
+  .pipeline-diverge svg { width: 100%; height: 100%; overflow: visible; }
+  .pipeline-outputs { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .pipe-output {
+    background: var(--em-dim); border: 1px solid var(--border-em); border-radius: 8px;
+    padding: 8px 16px; font-family: var(--font-mono); font-size: 11px; color: var(--em); white-space: nowrap;
+  }
 
-  /* STATS BAR */
-  .stats-bar {
-    background: var(--bg2);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 48px;
-    text-align: center;
-    position: relative; z-index: 1;
+  /* STATS STRIP — inside demo section */
+  .stats-strip {
+    display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;
+    margin-top: 40px; padding: 20px 32px;
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
   }
-  .stats-bar p { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.8px; }
-  .stats-bar span { color: var(--em); }
+  .stat-item { text-align: center; }
+  .stat-item .val { font-family: var(--font-mono); font-size: 22px; font-weight: 500; color: var(--em); display: block; letter-spacing: -0.5px; }
+  .stat-item .lbl { font-size: 11px; color: var(--text-3); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
 
   /* DEMO VIDEO */
   .demo-section {
@@ -414,7 +427,7 @@
     footer { flex-direction: column; gap: 16px; text-align: center; }
     .waitlist-form { padding: 24px 20px; }
     .int-tools { grid-template-columns: repeat(2, 1fr); }
-    .stats-bar { padding: 14px 20px; }
+    .stats-strip { gap: 20px; padding: 16px; }
   }
 </style>
 </head>
@@ -429,7 +442,10 @@
   <ul class="nav-links">
     <li><a href="#problem">Problem</a></li>
     <li><a href="#how">How it works</a></li>
+    <li><a href="#moat">Why Cortex</a></li>
     <li><a href="#usecases">Use cases</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#founders">Founders</a></li>
     <li><a href="https://cortex-ai-web-rymo.vercel.app" target="_blank" class="nav-signin">Sign in</a></li>
     <li><a href="#waitlist" class="nav-cta">Get pre-access →</a></li>
   </ul>
@@ -456,50 +472,49 @@
     <a href="#how" class="btn-secondary">See how it works</a>
   </div>
 
-  <p class="hero-live-badge">✓ Live product &nbsp;·&nbsp; <span>620 nodes built</span> &nbsp;·&nbsp; Connector API in production</p>
+  <p class="hero-live-badge">✓ Live product &nbsp;·&nbsp; Connector API in production</p>
 
-  <div class="pipeline">
-    <span class="pipe-node">GitHub</span>
-    <span class="pipe-arrow">→</span>
-    <span class="pipe-node">Notion</span>
-    <span class="pipe-arrow">→</span>
-    <span class="pipe-node brain">⬡ Cortex Brain</span>
-    <span class="pipe-arrow">→</span>
-    <span class="pipe-node">Any AI tool</span>
-  </div>
-</section>
-
-<!-- STATS BAR -->
-<div class="stats-bar">
-  <p>
-    <span>620</span> knowledge nodes &nbsp;·&nbsp;
-    <span>484</span> dependency edges &nbsp;·&nbsp;
-    <span>57</span> topic clusters &nbsp;·&nbsp;
-    Eval score <span>3.38 / 5</span> &nbsp;·&nbsp;
-    Connector API <span>live in production</span>
-  </p>
-</div>
-
-<!-- DEMO VIDEO -->
-<section class="demo-section">
-  <div class="container">
-    <div class="fade-in" style="text-align:center">
-      <span class="section-label" style="justify-content:center">See Cortex in action</span>
-      <h2 class="section-title" style="margin:0 auto 16px">Watch the Brain build itself.</h2>
-      <p class="section-body" style="margin:0 auto 0; text-align:center">
-        Cortex running on its own codebase — 620 knowledge nodes, 484 dependency edges, 57 topic clusters. Query eval score improved from 2.75 → 3.38/5 after iterative improvements.
-      </p>
+  <div class="pipeline-diagram">
+    <!-- Sources -->
+    <div class="pipeline-sources">
+      <div class="pipe-node">GitHub — code + PRs</div>
+      <div class="pipe-node">Notion — docs + PRDs</div>
+      <div class="pipe-node">OKRs — goals</div>
+      <div class="pipe-node">+ more coming soon</div>
     </div>
-    <div class="demo-video-wrap fade-in">
-      <div class="demo-video-placeholder">
-        <div class="demo-play-btn">
-          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M8 5l11 6-11 6V5z" fill="rgba(16,185,129,0.9)"/></svg>
-        </div>
-        <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);letter-spacing:0.8px;text-transform:uppercase">Demo video coming soon</p>
-        <!-- REPLACE WITH LOOM EMBED:
-        <iframe src="https://www.loom.com/embed/YOUR_VIDEO_ID" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
-        -->
-      </div>
+
+    <!-- Converging lines -->
+    <div class="pipeline-converge">
+      <svg viewBox="0 0 64 150" fill="none" preserveAspectRatio="none">
+        <path d="M0 19 Q48 19 64 75" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+        <path d="M0 56 Q40 56 64 75" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+        <path d="M0 94 Q40 94 64 75" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+        <path d="M0 131 Q48 131 64 75" stroke="rgba(255,255,255,0.1)" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+
+    <!-- Brain -->
+    <div class="pipe-brain">
+      ⬡ Brain
+      <span class="pipe-brain-sub">CORTEX</span>
+    </div>
+
+    <!-- Diverging lines -->
+    <div class="pipeline-diverge">
+      <svg viewBox="0 0 64 150" fill="none" preserveAspectRatio="none">
+        <path d="M0 75 Q16 75 64 19" stroke="rgba(16,185,129,0.25)" stroke-width="1" fill="none"/>
+        <path d="M0 75 Q24 75 64 56" stroke="rgba(16,185,129,0.25)" stroke-width="1" fill="none"/>
+        <path d="M0 75 Q24 75 64 94" stroke="rgba(16,185,129,0.25)" stroke-width="1" fill="none"/>
+        <path d="M0 75 Q16 75 64 131" stroke="rgba(16,185,129,0.25)" stroke-width="1" fill="none"/>
+      </svg>
+    </div>
+
+    <!-- Outputs -->
+    <div class="pipeline-outputs">
+      <div class="pipe-output">Cursor / Claude / Copilot</div>
+      <div class="pipe-output">PRD Generator</div>
+      <div class="pipe-output">Intake Agent</div>
+      <div class="pipe-output">REST API / MCP</div>
     </div>
   </div>
 </section>
@@ -644,6 +659,34 @@
   </div>
 </section>
 
+<!-- MOAT / WHY CORTEX -->
+<section class="moat" id="moat">
+  <div class="container">
+    <div class="fade-in">
+      <span class="section-label">Why Cortex</span>
+      <h2 class="section-title">Context that compounds.<br/>Memory that sticks.</h2>
+      <p class="section-body">The Brain isn't static. Every commit, every doc update, every iteration makes it richer — automatically.</p>
+    </div>
+    <div class="moat-grid fade-in">
+      <div class="moat-card">
+        <span class="moat-icon">🧬</span>
+        <h3>Stores the why</h3>
+        <p>Most tools store what was built. Cortex stores why. Every decision traces back to the PRD, PR, or doc that created it — queryable by anyone, any time.</p>
+      </div>
+      <div class="moat-card">
+        <span class="moat-icon">📈</span>
+        <h3>Compounds over time</h3>
+        <p>Every commit, every update, every new doc makes the Brain smarter. The longer Cortex runs, the more valuable it gets — and the less your team has to explain.</p>
+      </div>
+      <div class="moat-card">
+        <span class="moat-icon">⚡</span>
+        <h3>20-40x token efficiency</h3>
+        <p>Pre-synthesised graph nodes reduce downstream token consumption by an estimated 20-40x compared to raw document retrieval. Better answers, dramatically lower cost. We are not a cost — we are a cost reducer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- USE CASES -->
 <section class="usecases" id="usecases">
   <div class="container">
@@ -717,66 +760,42 @@
   </div>
 </section>
 
-<!-- INTEGRATIONS -->
-<section class="integrations" id="integrations">
+<!-- DEMO VIDEO -->
+<section class="demo-section" id="demo">
   <div class="container">
-    <div class="int-grid fade-in">
-      <div>
-        <span class="section-label">Integrations</span>
-        <h2 class="section-title">Plugs into your stack.<br/>No new tools.</h2>
-        <p class="section-body" style="margin-bottom: 32px;">The Brain connects to any AI tool via MCP or REST API. Cursor, Claude, Copilot, Notion AI — org-specific context flows in automatically. Your team keeps using what they already use.</p>
-        <div class="api-block">
-          <div class="api-block-header">MCP · REST API</div>
-          <div class="api-line"><span class="api-method">POST</span> <span class="api-path">/brain/query</span></div>
-          <div class="api-line"><span class="api-key">"question"</span>: <span class="api-val">"Why was auth split from payments?"</span></div>
-          <div class="api-line" style="margin-top: 8px; color: var(--text-3);">→ Returns structured context, sources, confidence</div>
-        </div>
-      </div>
-      <div>
-        <div class="int-tools">
-          <div class="int-tool"><div class="int-tool-icon">⚡</div>Cursor</div>
-          <div class="int-tool"><div class="int-tool-icon">◆</div>Claude</div>
-          <div class="int-tool"><div class="int-tool-icon">🤖</div>Copilot</div>
-          <div class="int-tool"><div class="int-tool-icon">📝</div>Notion AI</div>
-          <div class="int-tool"><div class="int-tool-icon">🔧</div>Any IDE</div>
-          <div class="int-tool"><div class="int-tool-icon">⚙️</div>Custom</div>
-          <div class="int-center">⬡ Cortex Brain · MCP + REST API · Any AI tool</div>
-        </div>
-      </div>
+    <div class="fade-in" style="text-align:center">
+      <span class="section-label" style="justify-content:center">See Cortex in action</span>
+      <h2 class="section-title" style="margin:0 auto 16px">Watch the Brain build itself.</h2>
+      <p class="section-body" style="margin:0 auto; text-align:center">
+        Cortex running on its own codebase. Query eval score improved from 2.75 → 3.38/5 after iterative improvements.
+      </p>
     </div>
-  </div>
-</section>
 
-<!-- MOAT / WHY CORTEX -->
-<section class="moat" id="moat">
-  <div class="container">
-    <div class="fade-in">
-      <span class="section-label">Why Cortex</span>
-      <h2 class="section-title">Context that compounds.<br/>Memory that sticks.</h2>
-      <p class="section-body">The Brain isn't static. Every commit, every doc update, every iteration makes it richer — automatically.</p>
+    <!-- Stats strip — contextual proof for the demo -->
+    <div class="stats-strip fade-in">
+      <div class="stat-item"><span class="val">620</span><span class="lbl">Knowledge nodes</span></div>
+      <div class="stat-item"><span class="val">484</span><span class="lbl">Dependency edges</span></div>
+      <div class="stat-item"><span class="val">57</span><span class="lbl">Topic clusters</span></div>
+      <div class="stat-item"><span class="val">3.38/5</span><span class="lbl">Eval score</span></div>
+      <div class="stat-item"><span class="val">Live</span><span class="lbl">Connector API</span></div>
     </div>
-    <div class="moat-grid fade-in">
-      <div class="moat-card">
-        <span class="moat-icon">🧬</span>
-        <h3>Stores the why</h3>
-        <p>Most tools store what was built. Cortex stores why. Every decision traces back to the PRD, PR, or doc that created it — queryable by anyone, any time.</p>
-      </div>
-      <div class="moat-card">
-        <span class="moat-icon">📈</span>
-        <h3>Compounds over time</h3>
-        <p>Every commit, every update, every new doc makes the Brain smarter. The longer Cortex runs, the more valuable it gets — and the less your team has to explain.</p>
-      </div>
-      <div class="moat-card">
-        <span class="moat-icon">⚡</span>
-        <h3>20-40x token efficiency</h3>
-        <p>Pre-synthesised graph nodes reduce downstream token consumption by an estimated 20-40x compared to raw document retrieval. Better answers, dramatically lower cost. We are not a cost — we are a cost reducer.</p>
+
+    <div class="demo-video-wrap fade-in">
+      <div class="demo-video-placeholder">
+        <div class="demo-play-btn">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M8 5l11 6-11 6V5z" fill="rgba(16,185,129,0.9)"/></svg>
+        </div>
+        <p style="font-family:var(--font-mono);font-size:11px;color:var(--text-3);letter-spacing:0.8px;text-transform:uppercase">Demo video coming soon</p>
+        <!-- REPLACE WITH LOOM EMBED:
+        <iframe src="https://www.loom.com/embed/YOUR_VIDEO_ID" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe>
+        -->
       </div>
     </div>
   </div>
 </section>
 
 <!-- FOUNDERS -->
-<section class="founders">
+<section class="founders" id="founders">
   <div class="container">
     <div class="fade-in">
       <span class="section-label">The founders</span>
